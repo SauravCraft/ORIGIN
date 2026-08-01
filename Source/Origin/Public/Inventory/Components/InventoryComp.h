@@ -7,6 +7,7 @@
 #include "InventoryComp.generated.h"
 
 class UItemObject;
+class UItemData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryChanged);
 
@@ -19,6 +20,13 @@ public:
 	// Sets default values for this component's properties
 	UInventoryComp();
 
+
+	UFUNCTION(BlueprintCallable)
+	void AddItem(UItemData* ItemData, int32 Quantity = 1);
+
+	UFUNCTION(BlueprintCallable)
+	bool RemoveItemByData(UItemData* ItemData, int32 Quantity);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -27,11 +35,11 @@ protected:
 	TArray<TObjectPtr<UItemObject>> Items;
 
 public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(BlueprintAssignable, Category = "Inventory")
 	FOnInventoryChanged OnInventoryChanged;
+
+
 
 		
 };

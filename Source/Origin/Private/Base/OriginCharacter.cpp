@@ -1,5 +1,7 @@
 #include "Base/OriginCharacter.h"
 #include "Engine/CollisionProfile.h"
+#include "Interaction/Items/PickupItem.h"
+#include "Inventory/Components/InventoryComp.h"
 #include "Interaction/Interface/Interactable.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
@@ -144,4 +146,23 @@ void AOriginCharacter::Interaction(const FInputActionValue& Value)
         return;
     }
     IInteractable::Execute_Interact(CurrentInteractable);
+
+    UInventoryComp* InvComp = FindComponentByClass<UInventoryComp>();
+
+    if (!InvComp)
+    {
+        return;
+    }
+
+    APickupItem* Pickup = Cast<APickupItem>(CurrentInteractable);
+
+    if (!Pickup || !Pickup->ItemData)
+    {
+        return;
+    }
+    InvComp->AddItem(Pickup->ItemData, Pickup->Quantity);
+
+    Pickup->Destroy();
+
+
 }
