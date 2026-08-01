@@ -27,6 +27,13 @@ AOriginCharacter::AOriginCharacter()
 	// CapsuleComponent->CanCharacterStepUpOn = ECB_Yes;
 }
 
+void AOriginCharacter::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+    UpdateInteractable();
+
+}
+
 
 void AOriginCharacter::BeginPlay()
 {
@@ -65,8 +72,7 @@ void AOriginCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 }
 
-
-void AOriginCharacter::Interaction(const FInputActionValue& Value)
+void AOriginCharacter::UpdateInteractable()
 {
     APlayerController* PC = Cast<APlayerController>(GetController());
 
@@ -81,20 +87,21 @@ void AOriginCharacter::Interaction(const FInputActionValue& Value)
     FVector WorldLocation;
     FVector WorldDirection;
 
-    PC->DeprojectScreenPositionToWorld(
+    if (!PC->DeprojectScreenPositionToWorld(
         ViewportX * 0.5f,
         ViewportY * 0.5f,
         WorldLocation,
-        WorldDirection
-    );
+        WorldDirection))
+    {
+        return;
+    }
 
     FVector Start = WorldLocation;
-    FVector End = Start + WorldDirection * 300.f;
+    FVector End = Start + WorldDirection * InteractionDistance;
 
     FHitResult Hit;
 
     FCollisionQueryParams Params;
-
     Params.AddIgnoredActor(this);
 
     bool bHit = GetWorld()->LineTraceSingleByChannel(
@@ -105,30 +112,49 @@ void AOriginCharacter::Interaction(const FInputActionValue& Value)
         Params
     );
 
-    DrawDebugLine(
-        GetWorld(),
-        Start,
-        End,
-        FColor::Red,
-        false,
-        2.f,
-        0,
-        1.f
-    );
+    AActor* NewInteractable = nullptr;
 
-    if (!bHit)
-        return;
-
-    AActor* HitActor = Hit.GetActor();
-
-    if (!HitActor)
-        return;
-
-    IInteractable* Interactable =
-        Cast<IInteractable>(HitActor);
-
-    if (Interactable)
+    if (bHit)
     {
-        Interactable->Interact();
+        AActor* HitActor = Hit.GetActor();
+
+        if (HitActor && HitActor->Implements<UInteractable>())
+        {
+            NewInteractable = HitActor;
+        }
     }
+
+    if (NewInteractable == CurrentInteractable)
+    {
+        return;
+    }
+
+    if (CurrentInteractable)
+    {
+        if (UActorComponent* Highlightable = CurrentInteractable->FindComponentByInterface(UInteractable::StaticClass());IsValid(Highlightable))
+        {
+            IInteractable::Execute_UnHighlight(Highlightable);
+        }
+    }
+
+    CurrentInteractable = NewInteractable;
+
+    if (CurrentInteractable)
+    {
+        if (UActorComponent* Highlightable = CurrentInteractable->FindComponentByInterface(UInteractable::StaticClass());IsValid(Highlightable))
+        {
+            IInteractable::Execute_Highlight(Highlightable);
+        }
+    }
+}
+
+
+
+void AOriginCharacter::Interaction(const FInputActionValue& Value)
+{
+    if (!CurrentInteractable)
+    {
+        return;
+    }
+    IInteractable::Execute_Interact(CurrentInteractable);
 }

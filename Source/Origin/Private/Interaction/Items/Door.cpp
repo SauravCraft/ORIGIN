@@ -3,7 +3,7 @@
 
 #include "Interaction/Items/Door.h"
 
-void ADoor::Interact()
+void ADoor::Interact_Implementation()
 {
 
     GEngine->AddOnScreenDebugMessage(

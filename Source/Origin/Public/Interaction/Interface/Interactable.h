@@ -24,8 +24,15 @@ class ORIGIN_API IInteractable
 
 
 public:
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void Interact();
 
-	virtual void Interact() = 0;
+	UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
+	void Highlight();
+
+	UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
+	void UnHighlight();
+
 
 
 };

@@ -18,6 +18,8 @@ class ORIGIN_API AOriginCharacter : public APawn
 public:
 	AOriginCharacter();
 
+	virtual void Tick(float DeltaTime) override;
+
 protected:
 
 	/** Root Capsule */
@@ -37,7 +39,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* InteractAction;
 
+	void UpdateInteractable();
+
 	void Interaction(const FInputActionValue& Value);
 
+private:
 
+	UPROPERTY()
+	TObjectPtr<AActor> CurrentInteractable = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
+	float InteractionDistance = 300.f;
 };

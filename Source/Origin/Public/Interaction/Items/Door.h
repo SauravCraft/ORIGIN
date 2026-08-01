@@ -17,5 +17,5 @@ class ORIGIN_API ADoor : public ABaseActor,public IInteractable
 	
 
 public:
-	virtual void Interact() override;
+	virtual void Interact_Implementation() override;
 };
