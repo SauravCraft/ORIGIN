@@ -1,6 +1,5 @@
 #include "Base/OriginCharacter.h"
 #include "Engine/CollisionProfile.h"
-#include "EnhancedInputSubsystems.h"
 #include "Interaction/Interface/Interactable.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
@@ -38,19 +37,7 @@ void AOriginCharacter::Tick(float DeltaTime)
 void AOriginCharacter::BeginPlay()
 {
 
-	Super::BeginPlay();
-
-	if (APlayerController* PC = Cast<APlayerController>(GetController()))
-	{
-		if (!PC) return;
-		ULocalPlayer* LP = PC->GetLocalPlayer();
-			if (!LP) return;
-			UEnhancedInputLocalPlayerSubsystem* Subsystem = LP->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
-			if (!Subsystem) return;
-			
-			Subsystem->AddMappingContext(DefaultMappingContext, 0);
-	}
-
+	Super::BeginPlay(); 
 }
 
 void AOriginCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

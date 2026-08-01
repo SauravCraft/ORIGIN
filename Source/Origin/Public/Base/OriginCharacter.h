@@ -30,10 +30,6 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	// Mapping Context
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	UInputMappingContext* DefaultMappingContext;
-
 	// Input Actions 
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
