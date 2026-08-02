@@ -14,4 +14,15 @@ class AOriginGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+
+	UFUNCTION(BlueprintCallable)
+	void RespawnPlayer(AController* PlayerController);
+
+	UFUNCTION(BlueprintCallable)
+	void SetCheckpoint(FTransform NewCheckpoint);
+
+	UPROPERTY(BlueprintReadWrite)
+	FTransform CurrentCheckpoint;
+
 };

@@ -1,5 +1,6 @@
 #include "Base/OriginCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "Base/OriginGameMode.h"
 #include "SaveSystem/OriginSaveGame.h"
 #include "Engine/CollisionProfile.h"
 #include "Interaction/Items/PickupItem.h"
@@ -35,6 +36,14 @@ void AOriginCharacter::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
     UpdateInteractable();
 
+}
+
+void AOriginCharacter::Die()
+{
+    
+    AOriginGameMode* GM = Cast<AOriginGameMode>(UGameplayStatics::GetGameMode(this));
+    if (!GM) return;
+    GM->RespawnPlayer(GetController());
 }
 
 
