@@ -1,21 +1,19 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
 #include "OriginSaveGame.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class ORIGIN_API UOriginSaveGame : public USaveGame
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
 public:
 
+    UOriginSaveGame();
+
+    /** Player */
     UPROPERTY(BlueprintReadWrite)
     FVector PlayerLocation;
 
@@ -25,7 +23,21 @@ public:
     UPROPERTY(BlueprintReadWrite)
     float Health = 100.f;
 
-    UPROPERTY()
-    TArray<int32> ActiveCheckpoints;
-	
+    /** Current Respawn Checkpoint */
+    UPROPERTY(BlueprintReadWrite)
+    FName CurrentCheckpoint;
+
+    UPROPERTY(BlueprintReadWrite)
+    FTransform CurrentCheckpointTransform;
+
+    /** Activated Checkpoints */
+    UPROPERTY(BlueprintReadWrite)
+    TArray<FName> ActiveCheckpoints;
+
+    /** Save Slot */
+    UPROPERTY(BlueprintReadWrite)
+    FString SlotName;
+
+    UPROPERTY(BlueprintReadWrite)
+    int32 UserIndex;
 };

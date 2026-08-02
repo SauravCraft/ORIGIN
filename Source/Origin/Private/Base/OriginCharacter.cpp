@@ -1,7 +1,7 @@
 #include "Base/OriginCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Base/OriginGameMode.h"
-#include "SaveSystem/OriginSaveGame.h"
+#include "SaveSystem/SaveManagerSubsystem.h"
 #include "Engine/CollisionProfile.h"
 #include "Interaction/Items/PickupItem.h"
 #include "Inventory/Components/InventoryComp.h"
@@ -73,13 +73,13 @@ void AOriginCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
         SaveAction,
         ETriggerEvent::Triggered,
         this,
-        &AOriginCharacter::SaveGame);
+        &AOriginCharacter::SaveGameTest);
 
     EnhancedInput->BindAction(
         LoadAction,
         ETriggerEvent::Triggered,
         this,
-        &AOriginCharacter::LoadGame);
+        &AOriginCharacter::LoadGameTest);
 
 
 }
@@ -190,43 +190,25 @@ void AOriginCharacter::Interaction(const FInputActionValue& Value)
 
 }
 
-void AOriginCharacter::SaveGame()
+void AOriginCharacter::SaveGameTest()
 {
-    UOriginSaveGame* SaveObject = nullptr;
+    USaveManagerSubsystem* SaveSubsystem =
+        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>();
 
-    if (UGameplayStatics::DoesSaveGameExist(TEXT("PlayerSave"), 0))
+    if (SaveSubsystem)
     {
-        SaveObject = Cast<UOriginSaveGame>(
-            UGameplayStatics::LoadGameFromSlot(TEXT("PlayerSave"), 0));
+        SaveSubsystem->SaveGame();
     }
-    else
-    {
-        SaveObject = Cast<UOriginSaveGame>(
-            UGameplayStatics::CreateSaveGameObject(UOriginSaveGame::StaticClass()));
-    }
-
-    if (!SaveObject)
-    {
-        return;
-    }
-
-    SaveObject->PlayerLocation = GetActorLocation();
-    SaveObject->PlayerRotation = GetActorRotation();
-
-    UGameplayStatics::SaveGameToSlot(SaveObject, TEXT("PlayerSave"), 0);
 }
 
-void AOriginCharacter::LoadGame()
+void AOriginCharacter::LoadGameTest()
 {
-    if (UGameplayStatics::DoesSaveGameExist(TEXT("PlayerSave"), 0))
+    USaveManagerSubsystem* SaveSubsystem =
+        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>();
+
+    if (SaveSubsystem)
     {
-        UOriginSaveGame* SaveObject =
-            Cast<UOriginSaveGame>(
-                UGameplayStatics::LoadGameFromSlot(TEXT("PlayerSave"), 0));
-
-        SetActorLocation(SaveObject->PlayerLocation);
-        SetActorRotation(SaveObject->PlayerRotation);
-
-        //Health = SaveObject->Health;
+        SaveSubsystem->LoadGame();
     }
+
 }

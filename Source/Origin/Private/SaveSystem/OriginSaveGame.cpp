@@ -1,5 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "SaveSystem/OriginSaveGame.h"
 
+UOriginSaveGame::UOriginSaveGame()
+{
+    SlotName = TEXT("PlayerSave");
+    UserIndex = 0;
+}

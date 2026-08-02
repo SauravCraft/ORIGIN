@@ -24,10 +24,10 @@ public:
 	void Die();
 
 	UFUNCTION(BlueprintCallable)
-	void SaveGame();
+	void SaveGameTest();
 
 	UFUNCTION(BlueprintCallable)
-	void LoadGame();
+	void LoadGameTest();
 
 protected:
 
