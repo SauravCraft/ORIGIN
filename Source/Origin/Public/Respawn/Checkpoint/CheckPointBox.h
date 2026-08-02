@@ -8,6 +8,7 @@
 
 
 class UBoxComponent;
+class UOriginSaveGame;
 
 
 UCLASS()
@@ -19,8 +20,17 @@ public:
 	// Sets default values for this actor's properties
 	ACheckPointBox();
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, Category = "Checkpoint")
     bool bActiveCheckPoint = false;
+
+    UPROPERTY(EditAnywhere, Category = "Checkpoint")
+    int32 CheckpointID;
+
+    UPROPERTY(VisibleAnywhere, Category = "Checkpoint")
+    int32 CurrentCheckpoint;
+
+    UPROPERTY()
+    UOriginSaveGame* SaveObject = nullptr;
 
 protected:
 	// Called when the game starts or when spawned

@@ -23,6 +23,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Die();
 
+	UFUNCTION(BlueprintCallable)
+	void SaveGame();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadGame();
+
 protected:
 
 	/** Root Capsule */
@@ -50,6 +56,7 @@ protected:
 
 	void Interaction(const FInputActionValue& Value);
 
+
 private:
 
 	UPROPERTY()
@@ -57,12 +64,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
 	float InteractionDistance = 300.f;
-
-	UFUNCTION()
-	void SaveGame();
-
-	UFUNCTION()
-	void LoadGame();
 
 
 };

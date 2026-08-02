@@ -24,5 +24,8 @@ public:
 
     UPROPERTY(BlueprintReadWrite)
     float Health = 100.f;
+
+    UPROPERTY()
+    TArray<int32> ActiveCheckpoints;
 	
 };

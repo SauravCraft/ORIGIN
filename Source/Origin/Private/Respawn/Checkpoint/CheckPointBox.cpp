@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "Respawn/Checkpoint/CheckPointBox.h"
+#include "SaveSystem/OriginSaveGame.h"
 #include "Base/OriginGameMode.h"
 #include "Base/OriginCharacter.h"
 #include "Kismet/GameplayStatics.h"
@@ -24,36 +25,73 @@ ACheckPointBox::ACheckPointBox()
 // Called when the game starts or when spawned
 void ACheckPointBox::BeginPlay()
 {
-	Super::BeginPlay();
-    CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &ACheckPointBox::OnOverlapBegin);
+    Super::BeginPlay();
 
+    CollisionBox->OnComponentBeginOverlap.AddDynamic(
+        this,
+        &ACheckPointBox::OnOverlapBegin);
+
+    if (UGameplayStatics::DoesSaveGameExist(TEXT("PlayerSave"), 0))
+    {
+        SaveObject = Cast<UOriginSaveGame>(
+            UGameplayStatics::LoadGameFromSlot(TEXT("PlayerSave"), 0));
+    }
+    else
+    {
+        SaveObject = Cast<UOriginSaveGame>(
+            UGameplayStatics::CreateSaveGameObject(UOriginSaveGame::StaticClass()));
+    }
+
+    if (!SaveObject)
+    {
+        return;
+    }
+
+    bActiveCheckPoint =
+        SaveObject->ActiveCheckpoints.Contains(CheckpointID);
 }
 
-void ACheckPointBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ACheckPointBox::OnOverlapBegin(
+    UPrimitiveComponent* OverlappedComponent,
+    AActor* OtherActor,
+    UPrimitiveComponent* OtherComp,
+    int32 OtherBodyIndex,
+    bool bFromSweep,
+    const FHitResult& SweepResult)
 {
-
-    // Save Transform
     AOriginCharacter* Player = Cast<AOriginCharacter>(OtherActor);
-    if (!Player || bActiveCheckPoint) return;
+
+    if (!Player || bActiveCheckPoint)
+    {
+        return;
+    }
+
+    AOriginGameMode* GM =
+        Cast<AOriginGameMode>(UGameplayStatics::GetGameMode(this));
+
+    if (!GM || !SaveObject)
+    {
+        return;
+    }
 
     bActiveCheckPoint = true;
 
-    AOriginGameMode* GM = Cast<AOriginGameMode>(UGameplayStatics::GetGameMode(this));
-    if (!GM) return;
-
+    SaveObject->ActiveCheckpoints.AddUnique(CheckpointID);
 
     FTransform CheckpointTransform = GetActorTransform();
-
-    // Replace only the rotation
     CheckpointTransform.SetRotation(Player->GetActorQuat());
 
     GM->SetCheckpoint(CheckpointTransform);
 
+    SaveObject->PlayerLocation = Player->GetActorLocation();
+    SaveObject->PlayerRotation = Player->GetActorRotation();
 
+    UGameplayStatics::SaveGameToSlot(
+        SaveObject,
+        TEXT("PlayerSave"),
+        0);
 
-
-
-
+    UE_LOG(LogTemp, Warning, TEXT("Checkpoint Saved"));
 }
 
 

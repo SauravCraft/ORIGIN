@@ -192,13 +192,26 @@ void AOriginCharacter::Interaction(const FInputActionValue& Value)
 
 void AOriginCharacter::SaveGame()
 {
-    UOriginSaveGame* SaveObject =
-        Cast<UOriginSaveGame>(
+    UOriginSaveGame* SaveObject = nullptr;
+
+    if (UGameplayStatics::DoesSaveGameExist(TEXT("PlayerSave"), 0))
+    {
+        SaveObject = Cast<UOriginSaveGame>(
+            UGameplayStatics::LoadGameFromSlot(TEXT("PlayerSave"), 0));
+    }
+    else
+    {
+        SaveObject = Cast<UOriginSaveGame>(
             UGameplayStatics::CreateSaveGameObject(UOriginSaveGame::StaticClass()));
+    }
+
+    if (!SaveObject)
+    {
+        return;
+    }
 
     SaveObject->PlayerLocation = GetActorLocation();
     SaveObject->PlayerRotation = GetActorRotation();
-    //SaveObject->Health = Health;
 
     UGameplayStatics::SaveGameToSlot(SaveObject, TEXT("PlayerSave"), 0);
 }
