@@ -29,6 +29,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void LoadGameTest();
 
+	FTimerHandle AutoSaveTimer;
+
+	void AutoSave();
+
+
 protected:
 
 	/** Root Capsule */

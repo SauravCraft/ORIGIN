@@ -44,6 +44,8 @@ void AOriginCharacter::Die()
     AOriginGameMode* GM = Cast<AOriginGameMode>(UGameplayStatics::GetGameMode(this));
     if (!GM) return;
     GM->RespawnPlayer(GetController());
+
+
 }
 
 
@@ -51,6 +53,21 @@ void AOriginCharacter::BeginPlay()
 {
 
 	Super::BeginPlay(); 
+
+    if (USaveManagerSubsystem* SaveSubsystem =
+        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
+    {
+        SaveSubsystem->LoadGame();
+    }
+
+    GetWorldTimerManager().SetTimer(
+        AutoSaveTimer,
+        this,
+        &AOriginCharacter::AutoSave,
+        100.0f,
+        true);
+
+
 }
 
 void AOriginCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -189,6 +206,19 @@ void AOriginCharacter::Interaction(const FInputActionValue& Value)
 
 
 }
+
+void AOriginCharacter::AutoSave()
+{
+    if (USaveManagerSubsystem* SaveSubsystem =
+        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
+    {
+        SaveSubsystem->SaveGame();
+
+        UE_LOG(LogTemp, Warning, TEXT("Auto Saved"));
+    }
+}
+
+
 
 void AOriginCharacter::SaveGameTest()
 {

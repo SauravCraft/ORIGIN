@@ -53,8 +53,8 @@ void USaveManagerSubsystem::LoadGame()
         return;
     }
 
-    SaveObject = Cast<UOriginSaveGame>(
-        UGameplayStatics::LoadGameFromSlot(SlotName, UserIndex));
+    //SaveObject = Cast<UOriginSaveGame>(
+    //    UGameplayStatics::LoadGameFromSlot(SlotName, UserIndex));
 
     Player->SetActorLocation(SaveObject->PlayerLocation);
     Player->SetActorRotation(SaveObject->PlayerRotation);
