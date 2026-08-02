@@ -1,19 +1,40 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Base/OriginGameMode.h"
+#include "Base/OriginCharacter.h"
+#include "SaveSystem/SaveManagerSubsystem.h"
+#include "Kismet/GameplayStatics.h"
 
 void AOriginGameMode::RespawnPlayer(AController* PlayerController)
 {
-    UE_LOG(LogTemp, Warning, TEXT("RespawnPlayer() Called"));
-	if (!PlayerController)  return ;
+    if (!PlayerController)
+    {
+        return;
+    }
 
-    FVector SpawnLocation = CurrentCheckpoint.GetLocation();
-    FRotator SpawnRotation = CurrentCheckpoint.GetRotation().Rotator();
+    USaveManagerSubsystem* SaveSubsystem =
+        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>();
+
+    if (!SaveSubsystem)
+    {
+        return;
+    }
+
+    FTransform SpawnTransform =
+        SaveSubsystem->GetCheckpointTransform();
+
+    FVector SpawnLocation = SpawnTransform.GetLocation();
+    FRotator SpawnRotation = SpawnTransform.GetRotation().Rotator();
 
     APawn* OldPawn = PlayerController->GetPawn();
 
     PlayerController->UnPossess();
+
+    if (OldPawn)
+    {
+        OldPawn->SetActorHiddenInGame(true);
+        OldPawn->SetActorEnableCollision(false);
+        OldPawn->DisableInput(nullptr);
+        OldPawn->SetLifeSpan(0.1f);
+    }
 
     FActorSpawnParameters SpawnParams;
     SpawnParams.SpawnCollisionHandlingOverride =
@@ -23,31 +44,15 @@ void AOriginGameMode::RespawnPlayer(AController* PlayerController)
         DefaultPawnClass,
         SpawnLocation,
         SpawnRotation,
-        SpawnParams
-    );
+        SpawnParams);
 
-    if (NewPawn)
+    if (!NewPawn)
     {
-        PlayerController->Possess(NewPawn);
-
-
-        if (OldPawn)
-        {
-            OldPawn->SetActorHiddenInGame(true);
-            OldPawn->SetActorEnableCollision(false);
-            OldPawn->DisableInput(nullptr);
-
-            OldPawn->SetLifeSpan(.001f);
-            UE_LOG(LogTemp, Warning, TEXT("Player Respawned"));
-        }
+        return;
     }
 
-    
+    PlayerController->Possess(NewPawn);
 
-}
 
-void AOriginGameMode::SetCheckpoint(FTransform NewCheckpoint)
-{
-	CurrentCheckpoint = NewCheckpoint;
-    UE_LOG(LogTemp, Warning, TEXT("Player Location set"));
+    UE_LOG(LogTemp, Warning, TEXT("Player Respawned"));
 }

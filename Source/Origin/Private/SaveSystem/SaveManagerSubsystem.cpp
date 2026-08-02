@@ -86,3 +86,8 @@ AOriginCharacter* USaveManagerSubsystem::GetPlayerCharacter() const
 
     return Cast<AOriginCharacter>(PC->GetPawn());
 }
+
+const FTransform& USaveManagerSubsystem::GetCheckpointTransform() const
+{
+    return SaveObject->CurrentCheckpointTransform;
+}

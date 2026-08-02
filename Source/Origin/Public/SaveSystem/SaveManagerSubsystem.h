@@ -30,6 +30,9 @@ public:
         return SaveObject;
     }
 
+    const FTransform& GetCheckpointTransform() const;
+
+
 private:
 
     UPROPERTY()
