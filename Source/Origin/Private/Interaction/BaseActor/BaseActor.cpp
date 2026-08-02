@@ -17,7 +17,7 @@ void ABaseActor::Interact_Implementation()
         -1,
         2.f,
         FColor::Green,
-        TEXT("Door Opened")
+        TEXT("Interacted")
     );
 
 }

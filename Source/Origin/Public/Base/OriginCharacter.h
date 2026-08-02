@@ -35,6 +35,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* InteractAction;
 
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* SaveAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* LoadAction;
+
+
 	void UpdateInteractable();
 
 	void Interaction(const FInputActionValue& Value);
@@ -46,4 +54,12 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
 	float InteractionDistance = 300.f;
+
+	UFUNCTION()
+	void SaveGame();
+
+	UFUNCTION()
+	void LoadGame();
+
+
 };

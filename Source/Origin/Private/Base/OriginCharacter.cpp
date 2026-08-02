@@ -1,4 +1,6 @@
 #include "Base/OriginCharacter.h"
+#include "Kismet/GameplayStatics.h"
+#include "SaveSystem/OriginSaveGame.h"
 #include "Engine/CollisionProfile.h"
 #include "Interaction/Items/PickupItem.h"
 #include "Inventory/Components/InventoryComp.h"
@@ -57,6 +59,18 @@ void AOriginCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		ETriggerEvent::Started,
 		this,
 		&AOriginCharacter::Interaction);
+
+    EnhancedInput->BindAction(
+        SaveAction,
+        ETriggerEvent::Triggered,
+        this,
+        &AOriginCharacter::SaveGame);
+
+    EnhancedInput->BindAction(
+        LoadAction,
+        ETriggerEvent::Triggered,
+        this,
+        &AOriginCharacter::LoadGame);
 
 
 }
@@ -165,4 +179,32 @@ void AOriginCharacter::Interaction(const FInputActionValue& Value)
     Pickup->Destroy();
 
 
+}
+
+void AOriginCharacter::SaveGame()
+{
+    UOriginSaveGame* SaveObject =
+        Cast<UOriginSaveGame>(
+            UGameplayStatics::CreateSaveGameObject(UOriginSaveGame::StaticClass()));
+
+    SaveObject->PlayerLocation = GetActorLocation();
+    SaveObject->PlayerRotation = GetActorRotation();
+    //SaveObject->Health = Health;
+
+    UGameplayStatics::SaveGameToSlot(SaveObject, TEXT("PlayerSave"), 0);
+}
+
+void AOriginCharacter::LoadGame()
+{
+    if (UGameplayStatics::DoesSaveGameExist(TEXT("PlayerSave"), 0))
+    {
+        UOriginSaveGame* SaveObject =
+            Cast<UOriginSaveGame>(
+                UGameplayStatics::LoadGameFromSlot(TEXT("PlayerSave"), 0));
+
+        SetActorLocation(SaveObject->PlayerLocation);
+        SetActorRotation(SaveObject->PlayerRotation);
+
+        //Health = SaveObject->Health;
+    }
 }
