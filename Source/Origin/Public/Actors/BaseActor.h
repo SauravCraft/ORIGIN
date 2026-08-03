@@ -3,14 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Interaction/Interface/Interactable.h"
+#include "Interfaces/Interactable.h"
 #include "GameFramework/Actor.h"
 #include "BaseActor.generated.h"
 
-class UItemData;
-
 UCLASS()
-class ORIGIN_API ABaseActor : public AActor, public IInteractable
+class ORIGIN_API  ABaseActor : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 	

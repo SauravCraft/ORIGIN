@@ -1,13 +1,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Interaction/BaseActor/BaseActor.h"
+#include "Actors/BaseActor.h"
 #include "PickupItem.generated.h"
 
 class UItemData;
 
 UCLASS()
-class ORIGIN_API APickupItem : public ABaseActor
+class ORIGIN_API  APickupItem : public ABaseActor
 {
     GENERATED_BODY()
 

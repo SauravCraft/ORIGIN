@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Interaction/BaseActor/BaseActor.h"
+#include "Actors/BaseActor.h"
 
 // Sets default values
 ABaseActor::ABaseActor()

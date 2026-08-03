@@ -1,4 +1,4 @@
-#include "Interaction/Items/PickupItem.h"
+#include "Actors/PickupItem.h"
 
 APickupItem::APickupItem()
 {

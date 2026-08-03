@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Interaction/BaseActor/BaseActor.h"
+#include "Actors/BaseActor.h"
 #include "Door.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ORIGIN_API ADoor : public ABaseActor
+class ORIGIN_API  ADoor : public ABaseActor
 {
 	GENERATED_BODY()
 
