@@ -55,6 +55,7 @@ DerivedDataCache/
 
 Plugins/*/Binaries/
 Plugins/*/Intermediate/
+Plugins/*/Content/
 Content/
 
 # ==========================================
