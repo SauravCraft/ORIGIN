@@ -2,12 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "InputActionValue.h"
 #include "Components/CapsuleComponent.h"
 #include "OriginCharacter.generated.h"
 
-
-class UInputMappingContext;
 class UInputAction;
 
 UCLASS(Blueprintable)
@@ -34,6 +31,10 @@ public:
 	void AutoSave();
 
 
+	UFUNCTION()
+	void interact();
+
+
 protected:
 
 	/** Root Capsule */
@@ -55,20 +56,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* LoadAction;
-
-
-	void UpdateInteractable();
-
-	void Interaction(const FInputActionValue& Value);
-
-
-private:
-
-	UPROPERTY()
-	TObjectPtr<AActor> CurrentInteractable = nullptr;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
-	float InteractionDistance = 300.f;
 
 
 };
