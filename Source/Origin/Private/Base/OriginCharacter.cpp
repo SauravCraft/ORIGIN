@@ -1,14 +1,10 @@
 #include "Base/OriginCharacter.h"
-#include "Kismet/GameplayStatics.h"
+
 #include "Base/OriginGameMode.h"
 #include "SaveSystem/SaveManagerSubsystem.h"
-#include "Engine/CollisionProfile.h"
-#include "Interaction/Items/PickupItem.h"
-#include "Inventory/Components/InventoryComp.h"
-#include "Interaction/Interface/Interactable.h"
-#include "Engine/World.h"
-#include "DrawDebugHelpers.h"
 #include "EnhancedInputComponent.h"
+#include "Engine/CollisionProfile.h"
+#include "Kismet/GameplayStatics.h"
 
 AOriginCharacter::AOriginCharacter()
 {
@@ -34,19 +30,17 @@ AOriginCharacter::AOriginCharacter()
 void AOriginCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-    UpdateInteractable();
-
 }
 
-void AOriginCharacter::Die()
-{
-    
-    AOriginGameMode* GM = Cast<AOriginGameMode>(UGameplayStatics::GetGameMode(this));
-    if (!GM) return;
-    GM->RespawnPlayer(GetController());
-
-
-}
+//void AOriginCharacter::Die()
+//{
+//    
+//    AOriginGameMode* GM = Cast<AOriginGameMode>(UGameplayStatics::GetGameMode(this));
+//    if (!GM) return;
+//    GM->RespawnPlayer(GetController());
+//
+//
+//}
 
 
 void AOriginCharacter::BeginPlay()
@@ -79,12 +73,9 @@ void AOriginCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	if (!EnhancedInput) return;
 
-	// Binding Input Function 
-	EnhancedInput->BindAction(
-		InteractAction,
-		ETriggerEvent::Started,
-		this,
-		&AOriginCharacter::Interaction);
+
+    
+    // Binding Input Function 
 
     EnhancedInput->BindAction(
         SaveAction,
@@ -101,111 +92,6 @@ void AOriginCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 }
 
-void AOriginCharacter::UpdateInteractable()
-{
-    APlayerController* PC = Cast<APlayerController>(GetController());
-
-    if (!PC)
-    {
-        return;
-    }
-
-    int32 ViewportX, ViewportY;
-    PC->GetViewportSize(ViewportX, ViewportY);
-
-    FVector WorldLocation;
-    FVector WorldDirection;
-
-    if (!PC->DeprojectScreenPositionToWorld(
-        ViewportX * 0.5f,
-        ViewportY * 0.5f,
-        WorldLocation,
-        WorldDirection))
-    {
-        return;
-    }
-
-    FVector Start = WorldLocation;
-    FVector End = Start + WorldDirection * InteractionDistance;
-
-    FHitResult Hit;
-
-    FCollisionQueryParams Params;
-    Params.AddIgnoredActor(this);
-
-    bool bHit = GetWorld()->LineTraceSingleByChannel(
-        Hit,
-        Start,
-        End,
-        ECC_Visibility,
-        Params
-    );
-
-    AActor* NewInteractable = nullptr;
-
-    if (bHit)
-    {
-        AActor* HitActor = Hit.GetActor();
-
-        if (HitActor && HitActor->Implements<UInteractable>())
-        {
-            NewInteractable = HitActor;
-        }
-    }
-
-    if (NewInteractable == CurrentInteractable)
-    {
-        return;
-    }
-
-    if (CurrentInteractable)
-    {
-        if (UActorComponent* Highlightable = CurrentInteractable->FindComponentByInterface(UInteractable::StaticClass());IsValid(Highlightable))
-        {
-            IInteractable::Execute_UnHighlight(Highlightable);
-        }
-    }
-
-    CurrentInteractable = NewInteractable;
-
-    if (CurrentInteractable)
-    {
-        if (UActorComponent* Highlightable = CurrentInteractable->FindComponentByInterface(UInteractable::StaticClass());IsValid(Highlightable))
-        {
-            IInteractable::Execute_Highlight(Highlightable);
-        }
-    }
-}
-
-
-
-void AOriginCharacter::Interaction(const FInputActionValue& Value)
-{
-    if (!CurrentInteractable)
-    {
-        return;
-    }
-    IInteractable::Execute_Interact(CurrentInteractable);
-
-    UInventoryComp* InvComp = FindComponentByClass<UInventoryComp>();
-
-    if (!InvComp)
-    {
-        return;
-    }
-
-    APickupItem* Pickup = Cast<APickupItem>(CurrentInteractable);
-
-    if (!Pickup || !Pickup->ItemData)
-    {
-        return;
-    }
-    InvComp->AddItem(Pickup->ItemData, Pickup->Quantity);
-
-    Pickup->Destroy();
-
-
-}
 
 void AOriginCharacter::AutoSave()
 {
