@@ -20,5 +20,13 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
+	],
+
+	"Plugins": [
+		{
+			"Name": "SaveSystem",
+			"Enabled": true
+		}
 	]
+
 }

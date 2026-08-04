@@ -1,4 +1,6 @@
 #include "Actors/CheckpointBox.h"
+#include "Subsystems/SaveManagerSubsystem.h"
+#include "SaveGames/SaveGameData.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Pawn.h"
 #include "Subsystems/RespawnSubsystem.h"
@@ -47,6 +49,13 @@ void ACheckpointBox::OnCheckpointBeginOverlap(
     if (URespawnSubsystem* RespawnSubsystem =
         GetGameInstance()->GetSubsystem<URespawnSubsystem>())
     {
+
+        if (USaveManagerSubsystem* Save =
+            GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
+        {
+            Save->SaveGame();
+        }
+
         bIsActivated = true;
         RespawnSubsystem->SetCheckpoint(Pawn->GetActorTransform());
     }

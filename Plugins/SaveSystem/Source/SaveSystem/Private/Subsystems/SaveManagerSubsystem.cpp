@@ -1,92 +1,127 @@
 #include "Subsystems/SaveManagerSubsystem.h"
+
 #include "SaveGames/SaveGameData.h"
+
 #include "Kismet/GameplayStatics.h"
 
 void USaveManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
 
-    //if (UGameplayStatics::DoesSaveGameExist(SlotName, UserIndex))
-    //{
-    //    SaveObject = Cast<USaveGameData>(
-    //        UGameplayStatics::LoadGameFromSlot(SlotName, UserIndex));
-    //}
-    //else
-    //{
-    //    SaveObject = Cast<UOriginSaveGame>(
-    //        UGameplayStatics::CreateSaveGameObject(
-    //            UOriginSaveGame::StaticClass()));
-    //}
+    UE_LOG(LogTemp, Log, TEXT("SaveManager Initialized"));
 }
 
-void USaveManagerSubsystem::SaveGame()
+void USaveManagerSubsystem::Deinitialize()
+{
+    Super::Deinitialize();
+
+    UE_LOG(LogTemp, Log, TEXT("SaveManager Deinitialized"));
+}
+
+
+bool USaveManagerSubsystem::SaveGame()
 {
 
-    //AOriginCharacter* Player = GetPlayerCharacter();
+    UE_LOG(LogTemp, Error, TEXT("===== SaveGame() CALLED ====="));
 
-    //if (!Player || !SaveObject)
-    //{
-    //    return;
-    //}
+    if (!CurrentSaveGame)
+    {
+        CurrentSaveGame =
+            Cast<USaveGameData>(
+                UGameplayStatics::CreateSaveGameObject(
+                    USaveGameData::StaticClass()));
 
-    //SaveObject->PlayerLocation = Player->GetActorLocation();
-    //SaveObject->PlayerRotation = Player->GetActorRotation();
+        if (!CurrentSaveGame)
+        {
+            return false;
+        }
+    }
 
-    //UGameplayStatics::SaveGameToSlot(
-    //    SaveObject,
-    //    SlotName,
-    //    UserIndex);
+    // Ask every plugin to write its data first
+    OnGameSaved.Broadcast(CurrentSaveGame);
+
+    // Then save to disk
+    if (!UGameplayStatics::SaveGameToSlot(
+        CurrentSaveGame,
+        SaveSlot,
+        UserIndex))
+    {
+        return false;
+    }
+
+    UE_LOG(LogTemp, Warning, TEXT("Game Saved"));
+
+    return true;
 }
 
-void USaveManagerSubsystem::LoadGame()
+
+bool USaveManagerSubsystem::LoadGame()
 {
-    //AOriginCharacter* Player = GetPlayerCharacter();
+    if (!UGameplayStatics::DoesSaveGameExist(
+        SaveSlot,
+        UserIndex))
+    {
+        return false;
+    }
 
-    //if (!Player || !SaveObject)
-    //{
-    //    return;
-    //}
+    CurrentSaveGame =
+        Cast<USaveGameData>(
+            UGameplayStatics::LoadGameFromSlot(
+                SaveSlot,
+                UserIndex));
 
-    //if (!UGameplayStatics::DoesSaveGameExist(SlotName, UserIndex))
-    //{
-    //    return;
-    //}
+    if (!CurrentSaveGame)
+    {
+        return false;
+    }
 
-    ////SaveObject = Cast<UOriginSaveGame>(
-    ////    UGameplayStatics::LoadGameFromSlot(SlotName, UserIndex));
+    // Restore data here
 
-    //Player->SetActorLocation(SaveObject->PlayerLocation);
-    //Player->SetActorRotation(SaveObject->PlayerRotation);
+    OnGameLoaded.Broadcast(CurrentSaveGame);
+
+    UE_LOG(LogTemp, Warning, TEXT("Game Loaded"));
+
+    return true;
 }
 
-void USaveManagerSubsystem::SetCurrentCheckpoint(
-    const FName& CheckpointID,
-    const FTransform& Transform)
+
+void USaveManagerSubsystem::SetSaveSlot(const FString& NewSlot)
 {
-    //if (!SaveObject)
-    //{
-    //    return;
-    //}
-
-    //SaveObject->CurrentCheckpoint = CheckpointID;
-    //SaveObject->CurrentCheckpointTransform = Transform;
-
-    //SaveObject->ActiveCheckpoints.AddUnique(CheckpointID);
+    SaveSlot = NewSlot;
 }
 
-//AOriginCharacter* USaveManagerSubsystem::GetPlayerCharacter() const
+FString USaveManagerSubsystem::GetSaveSlot() const
+{
+    return SaveSlot;
+}
+
+
+//void USaveManagerSubsystem::SaveCheckpoint(const FTransform& CheckpointTransform)
 //{
-//    APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-//
-//    if (!PC)
+//    if (!CurrentSaveGame)
 //    {
-//        return nullptr;
+//        CurrentSaveGame = Cast<USaveGameData>(
+//            UGameplayStatics::CreateSaveGameObject(
+//                USaveGameData::StaticClass()));
+//
+//        if (!CurrentSaveGame)
+//        {
+//            return;
+//        }
 //    }
 //
-//    return Cast<AOriginCharacter>(PC->GetPawn());
+//    CurrentSaveGame->CurrentCheckpointTransform = CheckpointTransform;
+//
+//    UE_LOG(LogTemp, Warning, TEXT("Checkpoint Saved"));
 //}
-
-//const FTransform& USaveManagerSubsystem::GetCheckpointTransform() const
+//
+//
+//FTransform USaveManagerSubsystem::GetCheckpointTransform() const
 //{
-//    //return SaveObject->CurrentCheckpointTransform;
+//    if (!CurrentSaveGame)
+//    {
+//        return FTransform::Identity;
+//    }
+//
+//    return CurrentSaveGame->CurrentCheckpointTransform;
 //}

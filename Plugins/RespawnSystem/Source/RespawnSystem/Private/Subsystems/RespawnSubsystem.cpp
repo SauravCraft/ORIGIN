@@ -1,6 +1,7 @@
 #include "Subsystems/RespawnSubsystem.h"
 #include "Actors/CheckpointBox.h"
-
+#include "Subsystems/SaveManagerSubsystem.h"
+#include "SaveGames/SaveGameData.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/Controller.h"
 
@@ -8,7 +9,23 @@ void URespawnSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
 
-    UE_LOG(LogTemp, Log, TEXT("Respawn Subsystem Initialized"));
+    if (USaveManagerSubsystem* Save =
+        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
+    {
+        Save->OnGameSaved.AddUObject(
+            this,
+            &URespawnSubsystem::HandleSave);
+
+        Save->OnGameLoaded.AddUObject(
+            this,
+            &URespawnSubsystem::HandleLoad);
+
+        UE_LOG(LogTemp, Warning, TEXT("Respawn Bound To Save Delegates"));
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("Save Subsystem NOT FOUND"));
+    }
 }
 
 void URespawnSubsystem::Deinitialize()
@@ -20,7 +37,6 @@ void URespawnSubsystem::Deinitialize()
 
 void URespawnSubsystem::SetCheckpoint(FTransform Checkpoint)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Checkpoint Called"));
 
     if (!Checkpoint.IsValid())
     {
@@ -31,7 +47,7 @@ void URespawnSubsystem::SetCheckpoint(FTransform Checkpoint)
 
     OnCheckpointActivated.Broadcast(CurrentCheckpoint);
 
-    UE_LOG(LogTemp, Warning, TEXT("Checkpoint Activated"));
+    UE_LOG(LogTemp, Warning, TEXT("Checkpoint Broadcast"));
 }
 
 bool URespawnSubsystem::RespawnPlayer(APawn* Pawn)
@@ -88,4 +104,24 @@ bool URespawnSubsystem::RespawnPlayer(APawn* Pawn)
     UE_LOG(LogTemp, Warning, TEXT("Player Respawned"));
 
     return true;
+}
+
+
+
+void URespawnSubsystem::HandleSave(
+    USaveGameData* SaveGame)
+{
+    SaveGame->CurrentCheckpointTransform =
+        CurrentCheckpoint;
+    UE_LOG(LogTemp, Warning, TEXT("Game Saved >>>>>>>>>>>>>>>>>>"));
+
+}
+
+void URespawnSubsystem::HandleLoad(
+    USaveGameData* SaveGame)
+{
+    CurrentCheckpoint =
+        SaveGame->CurrentCheckpointTransform;
+    UE_LOG(LogTemp, Warning, TEXT("Game Load >>>>>>>>>>>>>>>>>>"));
+
 }
