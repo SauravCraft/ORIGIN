@@ -8,7 +8,6 @@ void USaveManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
 
-    UE_LOG(LogTemp, Log, TEXT("SaveManager Initialized"));
 }
 
 void USaveManagerSubsystem::Deinitialize()
@@ -77,9 +76,11 @@ bool USaveManagerSubsystem::LoadGame()
 
     // Restore data here
 
+    UE_LOG(LogTemp, Warning, TEXT("Before Broadcast"));
+
     OnGameLoaded.Broadcast(CurrentSaveGame);
 
-    UE_LOG(LogTemp, Warning, TEXT("Game Loaded"));
+    UE_LOG(LogTemp, Warning, TEXT("After Broadcast"));
 
     return true;
 }
@@ -94,34 +95,3 @@ FString USaveManagerSubsystem::GetSaveSlot() const
 {
     return SaveSlot;
 }
-
-
-//void USaveManagerSubsystem::SaveCheckpoint(const FTransform& CheckpointTransform)
-//{
-//    if (!CurrentSaveGame)
-//    {
-//        CurrentSaveGame = Cast<USaveGameData>(
-//            UGameplayStatics::CreateSaveGameObject(
-//                USaveGameData::StaticClass()));
-//
-//        if (!CurrentSaveGame)
-//        {
-//            return;
-//        }
-//    }
-//
-//    CurrentSaveGame->CurrentCheckpointTransform = CheckpointTransform;
-//
-//    UE_LOG(LogTemp, Warning, TEXT("Checkpoint Saved"));
-//}
-//
-//
-//FTransform USaveManagerSubsystem::GetCheckpointTransform() const
-//{
-//    if (!CurrentSaveGame)
-//    {
-//        return FTransform::Identity;
-//    }
-//
-//    return CurrentSaveGame->CurrentCheckpointTransform;
-//}

@@ -23,13 +23,6 @@ public:
     bool LoadGame();
 
 
-    //void SaveCheckpoint(const FTransform& CheckpointTransform);
-
-    //FTransform GetCheckpointTransform() const;
-
-
-
-
     void SetSaveSlot(const FString& NewSlot);
     FString GetSaveSlot() const;
 

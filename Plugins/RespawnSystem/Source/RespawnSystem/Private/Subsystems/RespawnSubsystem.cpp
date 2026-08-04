@@ -9,13 +9,14 @@ void URespawnSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
 
+
     if (USaveManagerSubsystem* Save =
         GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
     {
         Save->OnGameSaved.AddUObject(
             this,
             &URespawnSubsystem::HandleSave);
-
+        UE_LOG(LogTemp, Warning, TEXT("Binding Load Delegate"));
         Save->OnGameLoaded.AddUObject(
             this,
             &URespawnSubsystem::HandleLoad);
@@ -93,6 +94,12 @@ bool URespawnSubsystem::RespawnPlayer(APawn* Pawn)
         SpawnLocation,
         SpawnRotation,
         SpawnParams);
+    UE_LOG(LogTemp, Warning,
+        TEXT("Spawned Pawn At = %s"),
+        *NewPawn->GetActorLocation().ToString());
+    UE_LOG(LogTemp, Warning,
+        TEXT("Respawning At = %s"),
+        *CurrentCheckpoint.GetLocation().ToString());
 
     if (!NewPawn)
     {
@@ -101,8 +108,9 @@ bool URespawnSubsystem::RespawnPlayer(APawn* Pawn)
 
     Controller->Possess(NewPawn);
     
-    UE_LOG(LogTemp, Warning, TEXT("Player Respawned"));
-
+    UE_LOG(LogTemp, Warning,
+        TEXT("Pawn After Possess = %s"),
+        *NewPawn->GetActorLocation().ToString());
     return true;
 }
 
@@ -113,8 +121,9 @@ void URespawnSubsystem::HandleSave(
 {
     SaveGame->CurrentCheckpointTransform =
         CurrentCheckpoint;
-    UE_LOG(LogTemp, Warning, TEXT("Game Saved >>>>>>>>>>>>>>>>>>"));
-
+    UE_LOG(LogTemp, Warning,
+        TEXT("Saved Checkpoint = %s"),
+        *CurrentCheckpoint.GetLocation().ToString());
 }
 
 void URespawnSubsystem::HandleLoad(
@@ -122,6 +131,7 @@ void URespawnSubsystem::HandleLoad(
 {
     CurrentCheckpoint =
         SaveGame->CurrentCheckpointTransform;
-    UE_LOG(LogTemp, Warning, TEXT("Game Load >>>>>>>>>>>>>>>>>>"));
-
+    UE_LOG(LogTemp, Warning,
+        TEXT("Loaded Checkpoint = %s"),
+        *CurrentCheckpoint.GetLocation().ToString());
 }

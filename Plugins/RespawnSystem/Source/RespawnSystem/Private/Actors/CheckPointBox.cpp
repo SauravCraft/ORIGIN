@@ -46,18 +46,18 @@ void ACheckpointBox::OnCheckpointBeginOverlap(
     }
 
 
-    if (URespawnSubsystem* RespawnSubsystem =
+    bIsActivated = true;
+
+    if (URespawnSubsystem* Respawn =
         GetGameInstance()->GetSubsystem<URespawnSubsystem>())
     {
+        Respawn->SetCheckpoint(Pawn->GetActorTransform());
+    }
 
-        if (USaveManagerSubsystem* Save =
-            GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
-        {
-            Save->SaveGame();
-        }
-
-        bIsActivated = true;
-        RespawnSubsystem->SetCheckpoint(Pawn->GetActorTransform());
+    if (USaveManagerSubsystem* Save =
+        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
+    {
+        Save->SaveGame();
     }
 
     UE_LOG(LogTemp, Warning, TEXT("CheckPoint Hit!"));

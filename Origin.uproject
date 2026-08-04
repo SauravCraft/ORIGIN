@@ -30,6 +30,12 @@
 			"Name": "InteractionSystem",
 			"Enabled": true
 		},
+
+		{
+			"Name": "SaveSystem",
+			"Enabled": true
+		},
+
 		{
 			"Name": "MotionWarping",
 			"Enabled": true

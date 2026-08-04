@@ -1,6 +1,7 @@
 #include "Base/OriginCharacter.h"
 
 #include "Base/OriginGameMode.h"
+#include "Subsystems/SaveManagerSubsystem.h"
 #include "Components/InteractionComponent.h"
 #include "EnhancedInputComponent.h"
 #include "Engine/CollisionProfile.h"
@@ -48,11 +49,11 @@ void AOriginCharacter::BeginPlay()
 
 	Super::BeginPlay(); 
 
-    //if (USaveManagerSubsystem* SaveSubsystem =
-    //    GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
-    //{
-    //    SaveSubsystem->LoadGame();
-    //}
+    if (USaveManagerSubsystem* SaveSubsystem =
+        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
+    {
+        SaveSubsystem->LoadGame();
+    }
 
     //GetWorldTimerManager().SetTimer(
     //    AutoSaveTimer,
