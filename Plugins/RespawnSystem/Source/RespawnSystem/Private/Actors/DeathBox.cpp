@@ -1,8 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Respawn/DeathPoint/DeathBox.h"
-#include "Base/OriginCharacter.h"
+#include "Actors/DeathBox.h"
 #include "Components/BoxComponent.h"
 
 // Sets default values
@@ -34,19 +33,7 @@ void ADeathBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor*
 {
     // Call Death in Character
 
-    AOriginCharacter* Player = Cast<AOriginCharacter>(OtherActor);
-    if (!Player) return;
-
-    Player->Die();
-
-
-
-
-
-
-
-
-
+    UE_LOG(LogTemp, Warning, TEXT("Death Box Hit!"));
 
 }
 

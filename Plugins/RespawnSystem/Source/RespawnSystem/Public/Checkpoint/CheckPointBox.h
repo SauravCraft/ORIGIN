@@ -2,23 +2,23 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "CheckPointBox.generated.h"
+#include "CheckpointBox.generated.h"
 
 class UBoxComponent;
 
 UCLASS()
-class ORIGIN_API ACheckPointBox : public AActor
+class RESPAWNSYSTEM_API ACheckpointBox : public AActor
 {
     GENERATED_BODY()
 
 public:
-    ACheckPointBox();
+    ACheckpointBox();
 
 protected:
     virtual void BeginPlay() override;
 
     UFUNCTION()
-    void OnOverlapBegin(
+    void OnCheckpointBeginOverlap(
         UPrimitiveComponent* OverlappedComponent,
         AActor* OtherActor,
         UPrimitiveComponent* OtherComp,
@@ -26,14 +26,8 @@ protected:
         bool bFromSweep,
         const FHitResult& SweepResult);
 
-private:
+public:
 
-    UPROPERTY(VisibleAnywhere)
-    UBoxComponent* CollisionBox;
-
-    UPROPERTY(EditAnywhere, Category = "Checkpoint")
-    FName CheckpointID;
-
-    UPROPERTY()
-    bool bActiveCheckPoint = false;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Checkpoint")
+    TObjectPtr<UBoxComponent> BoxComponent;
 };

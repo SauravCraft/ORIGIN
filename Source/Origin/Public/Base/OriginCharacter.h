@@ -30,6 +30,7 @@ public:
 
 	void AutoSave();
 
+	// Interaction function for Calling Interaction function inside Plugins
 
 	UFUNCTION()
 	void interact();
