@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Interfaces/RespawnableInterface.h"
 #include "GameFramework/Pawn.h"
 #include "Components/CapsuleComponent.h"
 #include "OriginCharacter.generated.h"
@@ -8,7 +9,7 @@
 class UInputAction;
 
 UCLASS(Blueprintable)
-class ORIGIN_API AOriginCharacter : public APawn
+class ORIGIN_API AOriginCharacter : public APawn, public IRespawnableInterface
 {
 	GENERATED_BODY()
 
@@ -17,8 +18,8 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION(BlueprintCallable)
-	void Die();
+	//UFUNCTION(BlueprintCallable)
+	//void Die();
 
 	UFUNCTION(BlueprintCallable)
 	void SaveGameTest();
@@ -34,6 +35,10 @@ public:
 
 	UFUNCTION()
 	void interact();
+
+	// For Checking Checkpoint Activator Or Not
+
+	virtual bool CanActivateCheckpoint_Implementation() const override;
 
 
 protected:

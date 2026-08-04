@@ -1,8 +1,8 @@
 #include "Actors/CheckpointBox.h"
-
+#include "Interfaces/RespawnableInterface.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Pawn.h"
-#include "RespawnSubsystem.h"
+#include "Subsystems/RespawnSubsystem.h"
 
 ACheckpointBox::ACheckpointBox()
 {
@@ -32,19 +32,30 @@ void ACheckpointBox::OnCheckpointBeginOverlap(
     bool bFromSweep,
     const FHitResult& SweepResult)
 {
-    APawn* Pawn = Cast<APawn>(OtherActor);
-
-    if (!Pawn)
+    if (!OtherActor)
     {
         return;
     }
 
-    if (UGameInstance* GI = GetGameInstance())
+    if (!OtherActor->Implements<URespawnableInterface>())
     {
-        if (URespawnSubsystem* RespawnSubsystem =
-            GI->GetSubsystem<URespawnSubsystem>())
-        {
-            RespawnSubsystem->SetCheckpoint(this);
-        }
+        return;
     }
+
+    const bool bCanActivate =
+        IRespawnableInterface::Execute_CanActivateCheckpoint(OtherActor);
+
+    if (!bCanActivate)
+    {
+        return;
+    }
+
+    if (URespawnSubsystem* RespawnSubsystem =
+        GetGameInstance()->GetSubsystem<URespawnSubsystem>())
+    {
+        RespawnSubsystem->SetCheckpoint(this);
+    }
+
+    UE_LOG(LogTemp, Warning, TEXT("CheckPoint Hit!"));
+
 }

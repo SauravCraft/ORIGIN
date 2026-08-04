@@ -33,15 +33,15 @@ void AOriginCharacter::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 }
 
-void AOriginCharacter::Die()
-{
-    
-    AOriginGameMode* GM = Cast<AOriginGameMode>(UGameplayStatics::GetGameMode(this));
-    if (!GM) return;
-    GM->RespawnPlayer(GetController());
-
-
-}
+//void AOriginCharacter::Die()
+//{
+//    
+//    AOriginGameMode* GM = Cast<AOriginGameMode>(UGameplayStatics::GetGameMode(this));
+//    if (!GM) return;
+//    GM->RespawnPlayer(GetController());
+//
+//
+//}
 
 
 void AOriginCharacter::BeginPlay()
@@ -120,6 +120,12 @@ void AOriginCharacter::interact()
 
     IC->Interaction();
 
+}
+
+
+bool AOriginCharacter::CanActivateCheckpoint_Implementation() const
+{
+    return true;
 }
 
 

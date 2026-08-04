@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Interfaces/Interactable.h"
 #include "Components/InteractionComponent.h"
+#include "Interfaces/Interactable.h"
 
 // Sets default values for this component's properties
 UInteractionComponent::UInteractionComponent()

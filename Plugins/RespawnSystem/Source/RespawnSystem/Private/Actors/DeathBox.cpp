@@ -2,6 +2,8 @@
 
 
 #include "Actors/DeathBox.h"
+#include "Interfaces/RespawnableInterface.h"
+#include "Subsystems/RespawnSubsystem.h"
 #include "Components/BoxComponent.h"
 
 // Sets default values
@@ -32,6 +34,37 @@ void ADeathBox::BeginPlay()
 void ADeathBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     // Call Death in Character
+
+    if (!OtherActor)
+    {
+        return;
+    }
+
+    if (!OtherActor->Implements<URespawnableInterface>())
+    {
+        return;
+    }
+
+    const bool bCanActivate =
+        IRespawnableInterface::Execute_CanActivateCheckpoint(OtherActor);
+
+    if (!bCanActivate)
+    {
+        return;
+    }
+
+    if (URespawnSubsystem* RespawnSubsystem =
+        GetGameInstance()->GetSubsystem<URespawnSubsystem>())
+    {
+
+        APawn* Pawn = Cast<APawn>(OtherActor);
+
+        if (Pawn)
+        {
+            RespawnSubsystem->RespawnPlayer(Pawn);
+        }
+
+    }
 
     UE_LOG(LogTemp, Warning, TEXT("Death Box Hit!"));
 
