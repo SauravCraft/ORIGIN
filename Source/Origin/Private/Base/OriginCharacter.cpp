@@ -1,7 +1,6 @@
 #include "Base/OriginCharacter.h"
 
 #include "Base/OriginGameMode.h"
-#include "SaveSystem/SaveManagerSubsystem.h"
 #include "Components/InteractionComponent.h"
 #include "EnhancedInputComponent.h"
 #include "Engine/CollisionProfile.h"
@@ -33,15 +32,15 @@ void AOriginCharacter::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 }
 
-void AOriginCharacter::Die()
-{
-    
-    AOriginGameMode* GM = Cast<AOriginGameMode>(UGameplayStatics::GetGameMode(this));
-    if (!GM) return;
-    GM->RespawnPlayer(GetController());
-
-
-}
+//void AOriginCharacter::Die()
+//{
+//    
+//    AOriginGameMode* GM = Cast<AOriginGameMode>(UGameplayStatics::GetGameMode(this));
+//    if (!GM) return;
+//    GM->RespawnPlayer(GetController());
+//
+//
+//}
 
 
 void AOriginCharacter::BeginPlay()
@@ -49,18 +48,18 @@ void AOriginCharacter::BeginPlay()
 
 	Super::BeginPlay(); 
 
-    if (USaveManagerSubsystem* SaveSubsystem =
-        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
-    {
-        SaveSubsystem->LoadGame();
-    }
+    //if (USaveManagerSubsystem* SaveSubsystem =
+    //    GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
+    //{
+    //    SaveSubsystem->LoadGame();
+    //}
 
-    GetWorldTimerManager().SetTimer(
-        AutoSaveTimer,
-        this,
-        &AOriginCharacter::AutoSave,
-        100.0f,
-        true);
+    //GetWorldTimerManager().SetTimer(
+    //    AutoSaveTimer,
+    //    this,
+    //    &AOriginCharacter::AutoSave,
+    //    100.0f,
+    //    true);
 
 
 }
@@ -78,71 +77,71 @@ void AOriginCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     
     // Binding Input Function 
 
-
-	EnhancedInput->BindAction(
-		InteractAction,
-		ETriggerEvent::Started,
-		this,
-		&AOriginCharacter::interact);
-
     EnhancedInput->BindAction(
-        SaveAction,
+        InteractAction,
         ETriggerEvent::Triggered,
         this,
-        &AOriginCharacter::SaveGameTest);
+        &AOriginCharacter::interact);
 
-    EnhancedInput->BindAction(
-        LoadAction,
-        ETriggerEvent::Triggered,
-        this,
-        &AOriginCharacter::LoadGameTest);
+    //EnhancedInput->BindAction(
+    //    LoadAction,
+    //    ETriggerEvent::Triggered,
+    //    this,
+    //    &AOriginCharacter::LoadGameTest);
+
+
+        //EnhancedInput->BindAction(
+    //    SaveAction,
+    //    ETriggerEvent::Triggered,
+    //    this,
+    //    &AOriginCharacter::SaveGameTest);
 
 
 }
 
 
-void AOriginCharacter::AutoSave()
-{
-    if (USaveManagerSubsystem* SaveSubsystem =
-        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
-    {
-        SaveSubsystem->SaveGame();
-
-        UE_LOG(LogTemp, Warning, TEXT("Auto Saved"));
-    }
-}
+//void AOriginCharacter::AutoSave()
+//{
+//    if (USaveManagerSubsystem* SaveSubsystem =
+//        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
+//    {
+//        SaveSubsystem->SaveGame();
+//
+//        UE_LOG(LogTemp, Warning, TEXT("Auto Saved"));
+//    }
+//}
+//
+//
+//
+//void AOriginCharacter::SaveGameTest()
+//{
+//    USaveManagerSubsystem* SaveSubsystem =
+//        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>();
+//
+//    if (SaveSubsystem)
+//    {
+//        SaveSubsystem->SaveGame();
+//    }
+//}
+//
+//void AOriginCharacter::LoadGameTest()
+//{
+//    USaveManagerSubsystem* SaveSubsystem =
+//        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>();
+//
+//    if (SaveSubsystem)
+//    {
+//        SaveSubsystem->LoadGame();
+//    }
+//
+//}
 
 void AOriginCharacter::interact()
 {
     UInteractionComponent* IC = FindComponentByClass<UInteractionComponent>();
-    
+
     if (!IC) return;
 
     IC->Interaction();
-
-}
-
-
-
-void AOriginCharacter::SaveGameTest()
-{
-    USaveManagerSubsystem* SaveSubsystem =
-        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>();
-
-    if (SaveSubsystem)
-    {
-        SaveSubsystem->SaveGame();
-    }
-}
-
-void AOriginCharacter::LoadGameTest()
-{
-    USaveManagerSubsystem* SaveSubsystem =
-        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>();
-
-    if (SaveSubsystem)
-    {
-        SaveSubsystem->LoadGame();
-    }
 
 }

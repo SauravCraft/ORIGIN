@@ -10,7 +10,7 @@
 class UBoxComponent;
 
 UCLASS()
-class ORIGIN_API ADeathBox : public AActor
+class RESPAWNSYSTEM_API ADeathBox : public AActor
 {
 	GENERATED_BODY()
 	

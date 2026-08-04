@@ -17,21 +17,19 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION(BlueprintCallable)
-	void Die();
+	//UFUNCTION(BlueprintCallable)
+	//void Die();
 
-	UFUNCTION(BlueprintCallable)
-	void SaveGameTest();
+	//UFUNCTION(BlueprintCallable)
+	//void SaveGameTest();
 
-	UFUNCTION(BlueprintCallable)
-	void LoadGameTest();
+	//UFUNCTION(BlueprintCallable)
+	//void LoadGameTest();
 
-	FTimerHandle AutoSaveTimer;
+	//FTimerHandle AutoSaveTimer;
 
-	void AutoSave();
+	//void AutoSave();
 
-
-	UFUNCTION()
 	void interact();
 
 
@@ -47,15 +45,16 @@ protected:
 
 	// Input Actions 
 
+
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* InteractAction;
 
+	//UPROPERTY(EditDefaultsOnly, Category = "Input")
+	//UInputAction* LoadAction;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	UInputAction* SaveAction;
+	//UPROPERTY(EditDefaultsOnly, Category = "Input")
+	//UInputAction* SaveAction;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	UInputAction* LoadAction;
 
 
 };

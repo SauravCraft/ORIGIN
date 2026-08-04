@@ -2,16 +2,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
-#include "OriginSaveGame.generated.h"
+#include "SaveGameData.generated.h"
 
 UCLASS()
-class ORIGIN_API UOriginSaveGame : public USaveGame
+class SAVESYSTEM_API USaveGameData : public USaveGame
 {
     GENERATED_BODY()
 
 public:
 
-    UOriginSaveGame();
+    USaveGameData();
 
     /** Player */
     UPROPERTY(BlueprintReadWrite)
