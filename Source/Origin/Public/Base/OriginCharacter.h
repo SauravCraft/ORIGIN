@@ -20,15 +20,18 @@ public:
 	//UFUNCTION(BlueprintCallable)
 	//void Die();
 
-	UFUNCTION(BlueprintCallable)
-	void SaveGameTest();
+	//UFUNCTION(BlueprintCallable)
+	//void SaveGameTest();
 
-	UFUNCTION(BlueprintCallable)
-	void LoadGameTest();
+	//UFUNCTION(BlueprintCallable)
+	//void LoadGameTest();
 
-	FTimerHandle AutoSaveTimer;
+	//FTimerHandle AutoSaveTimer;
 
-	void AutoSave();
+	//void AutoSave();
+
+	void interact();
+
 
 protected:
 
@@ -44,10 +47,14 @@ protected:
 
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	UInputAction* SaveAction;
+	UInputAction* InteractAction;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	UInputAction* LoadAction;
+	//UPROPERTY(EditDefaultsOnly, Category = "Input")
+	//UInputAction* LoadAction;
+
+	//UPROPERTY(EditDefaultsOnly, Category = "Input")
+	//UInputAction* SaveAction;
+
 
 
 };

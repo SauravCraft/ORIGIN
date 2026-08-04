@@ -1,7 +1,7 @@
 #include "Base/OriginCharacter.h"
 
 #include "Base/OriginGameMode.h"
-#include "SaveSystem/SaveManagerSubsystem.h"
+#include "Components/InteractionComponent.h"
 #include "EnhancedInputComponent.h"
 #include "Engine/CollisionProfile.h"
 #include "Kismet/GameplayStatics.h"
@@ -48,18 +48,18 @@ void AOriginCharacter::BeginPlay()
 
 	Super::BeginPlay(); 
 
-    if (USaveManagerSubsystem* SaveSubsystem =
-        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
-    {
-        SaveSubsystem->LoadGame();
-    }
+    //if (USaveManagerSubsystem* SaveSubsystem =
+    //    GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
+    //{
+    //    SaveSubsystem->LoadGame();
+    //}
 
-    GetWorldTimerManager().SetTimer(
-        AutoSaveTimer,
-        this,
-        &AOriginCharacter::AutoSave,
-        100.0f,
-        true);
+    //GetWorldTimerManager().SetTimer(
+    //    AutoSaveTimer,
+    //    this,
+    //    &AOriginCharacter::AutoSave,
+    //    100.0f,
+    //    true);
 
 
 }
@@ -78,53 +78,70 @@ void AOriginCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     // Binding Input Function 
 
     EnhancedInput->BindAction(
-        SaveAction,
+        InteractAction,
         ETriggerEvent::Triggered,
         this,
-        &AOriginCharacter::SaveGameTest);
+        &AOriginCharacter::interact);
 
-    EnhancedInput->BindAction(
-        LoadAction,
-        ETriggerEvent::Triggered,
-        this,
-        &AOriginCharacter::LoadGameTest);
+    //EnhancedInput->BindAction(
+    //    LoadAction,
+    //    ETriggerEvent::Triggered,
+    //    this,
+    //    &AOriginCharacter::LoadGameTest);
+
+
+        //EnhancedInput->BindAction(
+    //    SaveAction,
+    //    ETriggerEvent::Triggered,
+    //    this,
+    //    &AOriginCharacter::SaveGameTest);
 
 
 }
 
 
-void AOriginCharacter::AutoSave()
+//void AOriginCharacter::AutoSave()
+//{
+//    if (USaveManagerSubsystem* SaveSubsystem =
+//        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
+//    {
+//        SaveSubsystem->SaveGame();
+//
+//        UE_LOG(LogTemp, Warning, TEXT("Auto Saved"));
+//    }
+//}
+//
+//
+//
+//void AOriginCharacter::SaveGameTest()
+//{
+//    USaveManagerSubsystem* SaveSubsystem =
+//        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>();
+//
+//    if (SaveSubsystem)
+//    {
+//        SaveSubsystem->SaveGame();
+//    }
+//}
+//
+//void AOriginCharacter::LoadGameTest()
+//{
+//    USaveManagerSubsystem* SaveSubsystem =
+//        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>();
+//
+//    if (SaveSubsystem)
+//    {
+//        SaveSubsystem->LoadGame();
+//    }
+//
+//}
+
+void AOriginCharacter::interact()
 {
-    if (USaveManagerSubsystem* SaveSubsystem =
-        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
-    {
-        SaveSubsystem->SaveGame();
+    UInteractionComponent* IC = FindComponentByClass<UInteractionComponent>();
 
-        UE_LOG(LogTemp, Warning, TEXT("Auto Saved"));
-    }
-}
+    if (!IC) return;
 
-
-
-void AOriginCharacter::SaveGameTest()
-{
-    USaveManagerSubsystem* SaveSubsystem =
-        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>();
-
-    if (SaveSubsystem)
-    {
-        SaveSubsystem->SaveGame();
-    }
-}
-
-void AOriginCharacter::LoadGameTest()
-{
-    USaveManagerSubsystem* SaveSubsystem =
-        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>();
-
-    if (SaveSubsystem)
-    {
-        SaveSubsystem->LoadGame();
-    }
+    IC->Interaction();
 
 }

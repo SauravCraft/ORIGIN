@@ -4,11 +4,10 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "SaveManagerSubsystem.generated.h"
 
-class UOriginSaveGame;
-class AOriginCharacter;
+class USaveGameData;
 
 UCLASS()
-class ORIGIN_API USaveManagerSubsystem : public UGameInstanceSubsystem
+class SAVESYSTEM_API USaveManagerSubsystem : public UGameInstanceSubsystem
 {
     GENERATED_BODY()
 
@@ -24,26 +23,26 @@ public:
     void SetCurrentCheckpoint(const FName& CheckpointID,
         const FTransform& Transform);
 
-    // Access SaveObject
-    FORCEINLINE UOriginSaveGame* GetSaveObject() const
-    {
-        return SaveObject;
-    }
-
-    const FTransform& GetCheckpointTransform() const;
-
-
-private:
-
-    UPROPERTY()
-    UOriginSaveGame* SaveObject;
-
-    FString SlotName = TEXT("PlayerSave");
-
-    int32 UserIndex = 0;
-
-private:
-
-    AOriginCharacter* GetPlayerCharacter() const;
+//    // Access SaveObject
+//    FORCEINLINE USaveGameData* GetSaveObject() const
+//    {
+//        return SaveObject;
+//    }
+//
+//    const FTransform& GetCheckpointTransform() const;
+//
+//
+//private:
+//
+//    //UPROPERTY()
+//    //USaveGameData* SaveObject;
+//
+//    FString SlotName = TEXT("PlayerSave");
+//
+//    int32 UserIndex = 0;
+//
+//private:
+//
+//    AOriginCharacter* GetPlayerCharacter() const;
 
 };

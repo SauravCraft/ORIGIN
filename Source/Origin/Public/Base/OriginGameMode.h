@@ -9,7 +9,4 @@ class ORIGIN_API AOriginGameMode : public AGameModeBase
 {
     GENERATED_BODY()
 
-//public:
-//
-//    void RespawnPlayer(AController* PlayerController);
 };

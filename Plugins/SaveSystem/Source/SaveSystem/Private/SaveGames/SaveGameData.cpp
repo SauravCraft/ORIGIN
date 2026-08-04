@@ -1,6 +1,6 @@
-#include "SaveSystem/OriginSaveGame.h"
+#include "SaveGames/SaveGameData.h"
 
-UOriginSaveGame::UOriginSaveGame()
+USaveGameData::USaveGameData()
 {
     SlotName = TEXT("PlayerSave");
     UserIndex = 0;

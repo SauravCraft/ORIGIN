@@ -1,5 +1,4 @@
 #include "Subsystems/RespawnSubsystem.h"
-#include "Interfaces/RespawnableInterface.h"
 #include "Actors/CheckpointBox.h"
 
 #include "GameFramework/Pawn.h"
