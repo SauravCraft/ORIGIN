@@ -26,16 +26,10 @@
 			"Name": "AnimationWarping",
 			"Enabled": true
 		},
-
-
-		
-			{
-				"Name": "InteractionSystem",
-				"Enabled": true
-			}
-		,
-
-
+		{
+			"Name": "InteractionSystem",
+			"Enabled": true
+		},
 		{
 			"Name": "MotionWarping",
 			"Enabled": true

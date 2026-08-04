@@ -17,8 +17,8 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION(BlueprintCallable)
-	void Die();
+	//UFUNCTION(BlueprintCallable)
+	//void Die();
 
 	UFUNCTION(BlueprintCallable)
 	void SaveGameTest();
@@ -29,11 +29,6 @@ public:
 	FTimerHandle AutoSaveTimer;
 
 	void AutoSave();
-
-
-	UFUNCTION()
-	void interact();
-
 
 protected:
 
@@ -46,9 +41,6 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// Input Actions 
-
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	UInputAction* InteractAction;
 
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")

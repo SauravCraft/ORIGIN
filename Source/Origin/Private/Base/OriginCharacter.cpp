@@ -2,7 +2,6 @@
 
 #include "Base/OriginGameMode.h"
 #include "SaveSystem/SaveManagerSubsystem.h"
-#include "Components/InteractionComponent.h"
 #include "EnhancedInputComponent.h"
 #include "Engine/CollisionProfile.h"
 #include "Kismet/GameplayStatics.h"
@@ -33,15 +32,15 @@ void AOriginCharacter::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 }
 
-void AOriginCharacter::Die()
-{
-    
-    AOriginGameMode* GM = Cast<AOriginGameMode>(UGameplayStatics::GetGameMode(this));
-    if (!GM) return;
-    GM->RespawnPlayer(GetController());
-
-
-}
+//void AOriginCharacter::Die()
+//{
+//    
+//    AOriginGameMode* GM = Cast<AOriginGameMode>(UGameplayStatics::GetGameMode(this));
+//    if (!GM) return;
+//    GM->RespawnPlayer(GetController());
+//
+//
+//}
 
 
 void AOriginCharacter::BeginPlay()
@@ -78,13 +77,6 @@ void AOriginCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
     
     // Binding Input Function 
 
-
-	EnhancedInput->BindAction(
-		InteractAction,
-		ETriggerEvent::Started,
-		this,
-		&AOriginCharacter::interact);
-
     EnhancedInput->BindAction(
         SaveAction,
         ETriggerEvent::Triggered,
@@ -110,16 +102,6 @@ void AOriginCharacter::AutoSave()
 
         UE_LOG(LogTemp, Warning, TEXT("Auto Saved"));
     }
-}
-
-void AOriginCharacter::interact()
-{
-    UInteractionComponent* IC = FindComponentByClass<UInteractionComponent>();
-    
-    if (!IC) return;
-
-    IC->Interaction();
-
 }
 
 
