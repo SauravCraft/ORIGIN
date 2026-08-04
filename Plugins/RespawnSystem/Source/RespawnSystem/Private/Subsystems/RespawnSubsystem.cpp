@@ -19,11 +19,11 @@ void URespawnSubsystem::Deinitialize()
     UE_LOG(LogTemp, Log, TEXT("Respawn Subsystem Deinitialized"));
 }
 
-void URespawnSubsystem::SetCheckpoint(ACheckpointBox* Checkpoint)
+void URespawnSubsystem::SetCheckpoint(FTransform Checkpoint)
 {
     UE_LOG(LogTemp, Warning, TEXT("Checkpoint Called"));
 
-    if (!Checkpoint)
+    if (!Checkpoint.IsValid())
     {
         return;
     }
@@ -35,28 +35,57 @@ void URespawnSubsystem::SetCheckpoint(ACheckpointBox* Checkpoint)
     UE_LOG(LogTemp, Warning, TEXT("Checkpoint Activated"));
 }
 
-bool URespawnSubsystem::RespawnPlayer(APawn* Player)
+bool URespawnSubsystem::RespawnPlayer(APawn* Pawn)
 {
-
-    UE_LOG(LogTemp, Warning, TEXT("Player Respawned Called"));
-    if (!Player || !Player->Implements<URespawnableInterface>())
+    if (!Pawn)
     {
         return false;
     }
 
-    if (!CurrentCheckpoint)
+    AController* Controller = Pawn->GetController();
+
+    if (!Controller)
     {
-        UE_LOG(LogTemp, Warning, TEXT("No Active Checkpoint"));
         return false;
     }
 
+    UWorld* World = GetWorld();
 
-    Player->SetActorLocationAndRotation(
-        CurrentCheckpoint->GetActorLocation(),
-        CurrentCheckpoint->GetActorRotation());
+    if (!World)
+    {
+        return false;
+    }
 
-    OnPlayerRespawned.Broadcast(Player);
+    FVector SpawnLocation = CurrentCheckpoint.GetLocation();
+    FRotator SpawnRotation = CurrentCheckpoint.GetRotation().Rotator();
 
+    Controller->UnPossess();
+
+    if (Pawn)
+    {
+        Pawn->SetActorHiddenInGame(true);
+        Pawn->SetActorEnableCollision(false);
+        Pawn->DisableInput(nullptr);
+        Pawn->SetLifeSpan(0.1f);
+    }
+
+    FActorSpawnParameters SpawnParams;
+    SpawnParams.SpawnCollisionHandlingOverride =
+        ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+    APawn* NewPawn = World->SpawnActor<APawn>(
+        Pawn->GetClass(),
+        SpawnLocation,
+        SpawnRotation,
+        SpawnParams);
+
+    if (!NewPawn)
+    {
+        return false;
+    }
+
+    Controller->Possess(NewPawn);
+    
     UE_LOG(LogTemp, Warning, TEXT("Player Respawned"));
 
     return true;

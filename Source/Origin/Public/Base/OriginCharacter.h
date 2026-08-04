@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Interfaces/RespawnableInterface.h"
 #include "GameFramework/Pawn.h"
 #include "Components/CapsuleComponent.h"
 #include "OriginCharacter.generated.h"
@@ -9,7 +8,7 @@
 class UInputAction;
 
 UCLASS(Blueprintable)
-class ORIGIN_API AOriginCharacter : public APawn, public IRespawnableInterface
+class ORIGIN_API AOriginCharacter : public APawn
 {
 	GENERATED_BODY()
 
@@ -31,16 +30,6 @@ public:
 
 	void AutoSave();
 
-	// Interaction function for Calling Interaction function inside Plugins
-
-	UFUNCTION()
-	void interact();
-
-	// For Checking Checkpoint Activator Or Not
-
-	virtual bool CanActivateCheckpoint_Implementation() const override;
-
-
 protected:
 
 	/** Root Capsule */
@@ -52,9 +41,6 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// Input Actions 
-
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	UInputAction* InteractAction;
 
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")

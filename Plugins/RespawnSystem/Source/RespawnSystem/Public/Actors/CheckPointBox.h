@@ -26,6 +26,8 @@ protected:
         bool bFromSweep,
         const FHitResult& SweepResult);
 
+    bool bIsActivated = false;
+
 public:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Checkpoint")

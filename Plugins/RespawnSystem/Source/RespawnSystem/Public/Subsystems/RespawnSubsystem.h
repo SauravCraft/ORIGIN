@@ -4,10 +4,9 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "RespawnSubsystem.generated.h"
 
-class ACheckpointBox;
 class APawn;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnCheckpointActivated, ACheckpointBox*);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnCheckpointActivated, FTransform);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerRespawned, APawn*);
 
 UCLASS()
@@ -21,13 +20,13 @@ public:
     virtual void Deinitialize() override;
 
     /** Set active checkpoint */
-    void SetCheckpoint(ACheckpointBox* Checkpoint);
+    void SetCheckpoint(FTransform Checkpoint);
 
     /** Respawn an existing pawn */
     bool RespawnPlayer(APawn* Player);
 
     /** Current checkpoint */
-    FORCEINLINE ACheckpointBox* GetCurrentCheckpoint() const
+    FORCEINLINE FTransform GetCurrentCheckpoint() const
     {
         return CurrentCheckpoint;
     }
@@ -40,5 +39,6 @@ public:
 private:
 
     UPROPERTY()
-    TObjectPtr<ACheckpointBox> CurrentCheckpoint;
+    FTransform CurrentCheckpoint;
+
 };

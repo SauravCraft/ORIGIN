@@ -2,7 +2,6 @@
 
 
 #include "Actors/DeathBox.h"
-#include "Interfaces/RespawnableInterface.h"
 #include "Subsystems/RespawnSubsystem.h"
 #include "Components/BoxComponent.h"
 
@@ -40,29 +39,18 @@ void ADeathBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor*
         return;
     }
 
-    if (!OtherActor->Implements<URespawnableInterface>())
-    {
-        return;
-    }
-
-    const bool bCanActivate =
-        IRespawnableInterface::Execute_CanActivateCheckpoint(OtherActor);
-
-    if (!bCanActivate)
-    {
-        return;
-    }
-
     if (URespawnSubsystem* RespawnSubsystem =
         GetGameInstance()->GetSubsystem<URespawnSubsystem>())
     {
 
         APawn* Pawn = Cast<APawn>(OtherActor);
 
-        if (Pawn)
+        if (!Pawn || !Pawn->IsPlayerControlled())
         {
-            RespawnSubsystem->RespawnPlayer(Pawn);
+            return;
         }
+        
+        RespawnSubsystem->RespawnPlayer(Pawn);
 
     }
 
