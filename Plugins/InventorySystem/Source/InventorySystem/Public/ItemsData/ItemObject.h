@@ -7,7 +7,7 @@
 class UItemData;
 
 UCLASS(BlueprintType)
-class ORIGIN_API UItemObject : public UObject
+class INVENTORYSYSTEM_API UItemObject : public UObject
 {
     GENERATED_BODY()
 
