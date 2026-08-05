@@ -6,6 +6,9 @@
 
 class USaveGameData;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnGameSave, class USaveGameData*);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnGameLoad, class USaveGameData*);
+
 UCLASS()
 class SAVESYSTEM_API USaveManagerSubsystem : public UGameInstanceSubsystem
 {
@@ -14,35 +17,33 @@ class SAVESYSTEM_API USaveManagerSubsystem : public UGameInstanceSubsystem
 public:
 
     virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+    virtual void Deinitialize() override;
 
-    // Save / Load
-    void SaveGame();
-    void LoadGame();
+    bool SaveGame();
+    bool LoadGame();
 
-    // Checkpoint
-    void SetCurrentCheckpoint(const FName& CheckpointID,
-        const FTransform& Transform);
 
-//    // Access SaveObject
-//    FORCEINLINE USaveGameData* GetSaveObject() const
-//    {
-//        return SaveObject;
-//    }
-//
-//    const FTransform& GetCheckpointTransform() const;
-//
-//
-//private:
-//
-//    //UPROPERTY()
-//    //USaveGameData* SaveObject;
-//
-//    FString SlotName = TEXT("PlayerSave");
-//
-//    int32 UserIndex = 0;
-//
-//private:
-//
-//    AOriginCharacter* GetPlayerCharacter() const;
+    void SetSaveSlot(const FString& NewSlot);
+    FString GetSaveSlot() const;
 
+    FORCEINLINE USaveGameData* GetSaveGame() const
+    {
+        return CurrentSaveGame;
+    }
+
+private:
+
+    UPROPERTY()
+    TObjectPtr<USaveGameData> CurrentSaveGame;
+
+    UPROPERTY()
+    FString SaveSlot = TEXT("SaveSlot");
+
+    UPROPERTY()
+    int32 UserIndex = 0;
+
+public:
+
+    FOnGameSave OnGameSaved;
+    FOnGameLoad OnGameLoaded;
 };

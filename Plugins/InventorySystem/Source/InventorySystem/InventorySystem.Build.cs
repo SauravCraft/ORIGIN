@@ -38,6 +38,7 @@ public class InventorySystem : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+                "InteractionSystem",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

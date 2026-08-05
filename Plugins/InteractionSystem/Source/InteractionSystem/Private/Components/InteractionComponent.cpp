@@ -100,20 +100,24 @@ void UInteractionComponent::UpdateInteractable()
 
     if (CurrentInteractable)
     {
-        if (UActorComponent* Highlightable = CurrentInteractable->FindComponentByInterface(UInteractable::StaticClass());IsValid(Highlightable))
-        {
-            IInteractable::Execute_UnHighlight(Highlightable);
-        }
+        UE_LOG(LogTemp, Warning, TEXT("UnHighlight"));
+
+        UActorComponent* Highlightable =
+            CurrentInteractable->FindComponentByInterface(UInteractable::StaticClass());
+
+        IInteractable::Execute_UnHighlight(Highlightable);
     }
 
     CurrentInteractable = NewInteractable;
 
     if (CurrentInteractable)
     {
-        if (UActorComponent* Highlightable = CurrentInteractable->FindComponentByInterface(UInteractable::StaticClass());IsValid(Highlightable))
-        {
-            IInteractable::Execute_Highlight(Highlightable);
-        }
+        UE_LOG(LogTemp, Warning, TEXT("Highlight"));
+
+        UActorComponent* Highlightable =
+            CurrentInteractable->FindComponentByInterface(UInteractable::StaticClass());
+
+        IInteractable::Execute_Highlight(Highlightable);
     }
 }
 
@@ -125,8 +129,9 @@ void UInteractionComponent::Interaction()
     {
         return;
     }
-    IInteractable::Execute_Interact(CurrentInteractable);
-
+    IInteractable::Execute_Interact(
+        CurrentInteractable,
+        GetOwner());
     //UInventoryComp* InvComp = FindComponentByClass<UInventoryComp>();
 
     //if (!InvComp)

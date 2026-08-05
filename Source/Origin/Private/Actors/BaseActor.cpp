@@ -10,7 +10,7 @@ ABaseActor::ABaseActor()
 
 }
 
-void ABaseActor::Interact_Implementation()
+void ABaseActor::Interact_Implementation(AActor* Interactor)
 {
 
     GEngine->AddOnScreenDebugMessage(

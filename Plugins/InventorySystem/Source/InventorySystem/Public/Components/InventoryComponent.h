@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "InventoryComp.generated.h"
+#include "InventoryComponent.generated.h"
 
 class UItemObject;
 class UItemData;
@@ -12,17 +12,17 @@ class UItemData;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryChanged);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class ORIGIN_API UInventoryComp : public UActorComponent
+class INVENTORYSYSTEM_API UInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UInventoryComp();
+	UInventoryComponent();
 
 
 	UFUNCTION(BlueprintCallable)
-	void AddItem(UItemData* ItemData, int32 Quantity = 1);
+	bool AddItem(UItemData* ItemData, int32 Quantity = 1);
 
 	UFUNCTION(BlueprintCallable)
 	bool RemoveItemByData(UItemData* ItemData, int32 Quantity);

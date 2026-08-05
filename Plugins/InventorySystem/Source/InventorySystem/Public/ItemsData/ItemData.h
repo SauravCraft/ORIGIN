@@ -5,7 +5,7 @@
 #include "ItemData.generated.h"
 
 UCLASS(BlueprintType)
-class ORIGIN_API UItemData : public UPrimaryDataAsset
+class INVENTORYSYSTEM_API UItemData : public UPrimaryDataAsset
 {
     GENERATED_BODY()
 

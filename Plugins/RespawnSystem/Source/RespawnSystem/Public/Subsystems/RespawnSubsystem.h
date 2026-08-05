@@ -5,6 +5,7 @@
 #include "RespawnSubsystem.generated.h"
 
 class APawn;
+class USaveGameData;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnCheckpointActivated, FTransform);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerRespawned, APawn*);
@@ -31,7 +32,17 @@ public:
         return CurrentCheckpoint;
     }
 
-public:
+
+    // Save System 
+
+    UFUNCTION()
+    void HandleSave(USaveGameData* SaveGame);
+
+    UFUNCTION()
+    void HandleLoad(USaveGameData* SaveGame);
+
+
+    //  Delegates 
 
     FOnCheckpointActivated OnCheckpointActivated;
     FOnPlayerRespawned OnPlayerRespawned;

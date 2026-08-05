@@ -25,7 +25,7 @@ class INTERACTIONSYSTEM_API  IInteractable
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void Interact();
+	void Interact(AActor* Interactor);
 
 	UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
 	void Highlight();

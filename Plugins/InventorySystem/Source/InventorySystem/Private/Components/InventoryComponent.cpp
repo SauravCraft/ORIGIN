@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Inventory/Components/InventoryComp.h"
-#include "Inventory/Items/ItemObject.h"
+#include "Components/InventoryComponent.h"
+#include "ItemsData/ItemObject.h"
 
 // Sets default values for this component's properties
-UInventoryComp::UInventoryComp()
+UInventoryComponent::UInventoryComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -16,7 +16,7 @@ UInventoryComp::UInventoryComp()
 
 
 // Called when the game starts
-void UInventoryComp::BeginPlay()
+void UInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -24,11 +24,11 @@ void UInventoryComp::BeginPlay()
 	
 }
 
-void UInventoryComp::AddItem(UItemData* ItemData, int32 Quantity)
+bool UInventoryComponent::AddItem(UItemData* ItemData, int32 Quantity)
 {
     if (!ItemData)
     {
-        return;
+        return false;
     }
 
     UItemObject* NewItem = NewObject<UItemObject>(this);
@@ -40,9 +40,10 @@ void UInventoryComp::AddItem(UItemData* ItemData, int32 Quantity)
     Items.Add(NewItem);
 
     OnInventoryChanged.Broadcast();
+    return true;
 }
 
-bool UInventoryComp::RemoveItemByData(UItemData* ItemData, int32 Quantity)
+bool UInventoryComponent::RemoveItemByData(UItemData* ItemData, int32 Quantity)
 {
     if (!ItemData)
     {

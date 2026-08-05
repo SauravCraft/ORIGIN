@@ -1,4 +1,4 @@
-#include "Components/HighlightableMeshComp.h"
+#include "Components/HighlightableMeshComponent.h"
 
 UHighlightableMeshComponent::UHighlightableMeshComponent()
 {
