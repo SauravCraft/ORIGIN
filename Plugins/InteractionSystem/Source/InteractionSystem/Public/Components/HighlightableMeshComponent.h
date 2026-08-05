@@ -1,9 +1,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Interfaces/Interactable.h"
 #include "Components/StaticMeshComponent.h"
-#include "HighlightableMeshComp.generated.h"
+#include "Interfaces/Interactable.h"
+
+#include "HighlightableMeshComponent.generated.h"
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class INTERACTIONSYSTEM_API  UHighlightableMeshComponent : public UStaticMeshComponent , public IInteractable
