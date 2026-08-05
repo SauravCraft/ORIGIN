@@ -24,11 +24,11 @@ void UInventoryComponent::BeginPlay()
 	
 }
 
-void UInventoryComponent::AddItem(UItemData* ItemData, int32 Quantity)
+bool UInventoryComponent::AddItem(UItemData* ItemData, int32 Quantity)
 {
     if (!ItemData)
     {
-        return;
+        return false;
     }
 
     UItemObject* NewItem = NewObject<UItemObject>(this);
@@ -40,6 +40,7 @@ void UInventoryComponent::AddItem(UItemData* ItemData, int32 Quantity)
     Items.Add(NewItem);
 
     OnInventoryChanged.Broadcast();
+    return true;
 }
 
 bool UInventoryComponent::RemoveItemByData(UItemData* ItemData, int32 Quantity)

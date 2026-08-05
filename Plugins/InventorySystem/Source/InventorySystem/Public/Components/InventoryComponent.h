@@ -22,7 +22,7 @@ public:
 
 
 	UFUNCTION(BlueprintCallable)
-	void AddItem(UItemData* ItemData, int32 Quantity = 1);
+	bool AddItem(UItemData* ItemData, int32 Quantity = 1);
 
 	UFUNCTION(BlueprintCallable)
 	bool RemoveItemByData(UItemData* ItemData, int32 Quantity);
