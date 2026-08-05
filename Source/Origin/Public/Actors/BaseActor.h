@@ -17,5 +17,5 @@ public:
 	ABaseActor();
 
 
-	virtual void Interact_Implementation() override;
+	virtual void Interact_Implementation(AActor* Interactor) override;
 };

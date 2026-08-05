@@ -18,9 +18,9 @@ APickupActor::APickupActor()
     Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
     Mesh->SetupAttachment(RootComponent);
 
-    Sphere->OnComponentBeginOverlap.AddDynamic(
-        this,
-        &APickupActor::OnSphereBeginOverlap);
+    //Sphere->OnComponentBeginOverlap.AddDynamic(
+    //    this,
+    //    &APickupActor::OnSphereBeginOverlap);
 }
 
 void APickupActor::BeginPlay()
@@ -28,21 +28,16 @@ void APickupActor::BeginPlay()
     Super::BeginPlay();
 }
 
-void APickupActor::OnSphereBeginOverlap(
-    UPrimitiveComponent* OverlappedComponent,
-    AActor* OtherActor,
-    UPrimitiveComponent* OtherComp,
-    int32 OtherBodyIndex,
-    bool bFromSweep,
-    const FHitResult& SweepResult)
+
+void APickupActor::Interact_Implementation(AActor* Interactor)
 {
-    if (!OtherActor)
+    if (!Interactor)
     {
         return;
     }
 
     UInventoryComponent* Inventory =
-        OtherActor->FindComponentByClass<UInventoryComponent>();
+        Interactor->FindComponentByClass<UInventoryComponent>();
 
     if (!Inventory)
     {
@@ -54,3 +49,47 @@ void APickupActor::OnSphereBeginOverlap(
         Destroy();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+//void APickupActor::OnSphereBeginOverlap(
+//    UPrimitiveComponent* OverlappedComponent,
+//    AActor* OtherActor,
+//    UPrimitiveComponent* OtherComp,
+//    int32 OtherBodyIndex,
+//    bool bFromSweep,
+//    const FHitResult& SweepResult)
+//{
+//
+//
+//    if (!OtherActor)
+//    {
+//        return;
+//    }
+//
+//    UE_LOG(LogTemp, Warning, TEXT("Other Actor is valid"));
+//
+//    UInventoryComponent* Inventory =
+//        OtherActor->FindComponentByClass<UInventoryComponent>();
+//
+//    if (!Inventory)
+//    {
+//        UE_LOG(LogTemp, Error, TEXT("Inventory Component NOT FOUND"));
+//        return;
+//    }
+//    UE_LOG(LogTemp, Warning, TEXT("Inventory Component Found"));
+//    if (Inventory->AddItem(ItemData, Quantity))
+//    {
+//        Destroy();
+//    }
+//    return;
+//}

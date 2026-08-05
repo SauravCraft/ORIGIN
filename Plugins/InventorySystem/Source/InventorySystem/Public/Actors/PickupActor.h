@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Interfaces/Interactable.h"
 #include "GameFramework/Actor.h"
 #include "PickupActor.generated.h"
 
@@ -9,7 +10,7 @@ class USphereComponent;
 class UItemData;
 
 UCLASS()
-class INVENTORYSYSTEM_API APickupActor : public AActor
+class INVENTORYSYSTEM_API APickupActor : public AActor, public IInteractable
 {
     GENERATED_BODY()
 
@@ -19,16 +20,19 @@ public:
 protected:
     virtual void BeginPlay() override;
 
-    UFUNCTION()
-    void OnSphereBeginOverlap(
-        UPrimitiveComponent* OverlappedComponent,
-        AActor* OtherActor,
-        UPrimitiveComponent* OtherComp,
-        int32 OtherBodyIndex,
-        bool bFromSweep,
-        const FHitResult& SweepResult);
+    //UFUNCTION()
+    //void OnSphereBeginOverlap(
+    //    UPrimitiveComponent* OverlappedComponent,
+    //    AActor* OtherActor,
+    //    UPrimitiveComponent* OtherComp,
+    //    int32 OtherBodyIndex,
+    //    bool bFromSweep,
+    //    const FHitResult& SweepResult);
 
 public:
+
+    // Implement Interface for Interact
+    virtual void Interact_Implementation(AActor* Interactor) override;
 
     /** Mesh */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
