@@ -100,14 +100,24 @@ void UInteractionComponent::UpdateInteractable()
 
     if (CurrentInteractable)
     {
-        IInteractable::Execute_Highlight(CurrentInteractable);
+        UE_LOG(LogTemp, Warning, TEXT("UnHighlight"));
+
+        UActorComponent* Highlightable =
+            CurrentInteractable->FindComponentByInterface(UInteractable::StaticClass());
+
+        IInteractable::Execute_UnHighlight(Highlightable);
     }
 
     CurrentInteractable = NewInteractable;
 
     if (CurrentInteractable)
     {
-        IInteractable::Execute_UnHighlight(CurrentInteractable);
+        UE_LOG(LogTemp, Warning, TEXT("Highlight"));
+
+        UActorComponent* Highlightable =
+            CurrentInteractable->FindComponentByInterface(UInteractable::StaticClass());
+
+        IInteractable::Execute_Highlight(Highlightable);
     }
 }
 
