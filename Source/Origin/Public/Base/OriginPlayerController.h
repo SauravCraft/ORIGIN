@@ -6,9 +6,6 @@
 #include "GameFramework/PlayerController.h"
 #include "OriginPlayerController.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class ORIGIN_API AOriginPlayerController : public APlayerController
 {

@@ -31,6 +31,9 @@ public:
         return CurrentSaveGame;
     }
 
+    FOnGameSave OnGameSaved;
+    FOnGameLoad OnGameLoaded;
+
 private:
 
     UPROPERTY()
@@ -42,8 +45,5 @@ private:
     UPROPERTY()
     int32 UserIndex = 0;
 
-public:
 
-    FOnGameSave OnGameSaved;
-    FOnGameLoad OnGameLoaded;
 };

@@ -14,16 +14,6 @@ UInteractionComponent::UInteractionComponent()
 }
 
 
-// Called when the game starts
-void UInteractionComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
-	
-}
-
-
 // Called every frame
 void UInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -132,23 +122,5 @@ void UInteractionComponent::Interaction()
     IInteractable::Execute_Interact(
         CurrentInteractable,
         GetOwner());
-    //UInventoryComp* InvComp = FindComponentByClass<UInventoryComp>();
-
-    //if (!InvComp)
-    //{
-    //    return;
-    //}
-
-    //APickupItem* Pickup = Cast<APickupItem>(CurrentInteractable);
-
-    //if (!Pickup || !Pickup->ItemData)
-    //{
-    //    return;
-    //}
-    //InvComp->AddItem(Pickup->ItemData, Pickup->Quantity);
-
-    //Pickup->Destroy();
-
-
 }
 

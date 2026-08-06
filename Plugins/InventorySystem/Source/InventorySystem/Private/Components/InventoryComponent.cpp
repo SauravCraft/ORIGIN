@@ -15,15 +15,6 @@ UInventoryComponent::UInventoryComponent()
 }
 
 
-// Called when the game starts
-void UInventoryComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
-	
-}
-
 bool UInventoryComponent::AddItem(UItemData* ItemData, int32 Quantity)
 {
     if (!ItemData)

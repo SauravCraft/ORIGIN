@@ -17,20 +17,6 @@ class INVENTORYSYSTEM_API APickupActor : public AActor, public IInteractable
 public:
     APickupActor();
 
-protected:
-    virtual void BeginPlay() override;
-
-    //UFUNCTION()
-    //void OnSphereBeginOverlap(
-    //    UPrimitiveComponent* OverlappedComponent,
-    //    AActor* OtherActor,
-    //    UPrimitiveComponent* OtherComp,
-    //    int32 OtherBodyIndex,
-    //    bool bFromSweep,
-    //    const FHitResult& SweepResult);
-
-public:
-
     // Implement Interface for Interact
     virtual void Interact_Implementation(AActor* Interactor) override;
 
@@ -49,4 +35,16 @@ public:
     /** Stack Size */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inventory")
     int32 Quantity = 1;
+
+protected:
+
+    UFUNCTION()
+    void OnSphereBeginOverlap(
+        UPrimitiveComponent* OverlappedComponent,
+        AActor* OtherActor,
+        UPrimitiveComponent* OtherComp,
+        int32 OtherBodyIndex,
+        bool bFromSweep,
+        const FHitResult& SweepResult);
+
 };
