@@ -14,13 +14,12 @@ class RESPAWNSYSTEM_API URespawnComponent : public UActorComponent
 public:
     URespawnComponent();
 
-protected:
-    virtual void BeginPlay() override;
-
-public:
     /** Respawn the owner */
     UFUNCTION(BlueprintCallable, Category = "Respawn")
     void RespawnOwner();
+
+protected:
+    virtual void BeginPlay() override;
 
 private:
     UPROPERTY()

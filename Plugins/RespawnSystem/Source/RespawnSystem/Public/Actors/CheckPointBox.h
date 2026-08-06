@@ -14,6 +14,9 @@ class RESPAWNSYSTEM_API ACheckpointBox : public AActor
 public:
     ACheckpointBox();
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Checkpoint")
+    TObjectPtr<UBoxComponent> BoxComponent;
+
 protected:
     virtual void BeginPlay() override;
 
@@ -28,8 +31,5 @@ protected:
 
     bool bIsActivated = false;
 
-public:
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Checkpoint")
-    TObjectPtr<UBoxComponent> BoxComponent;
 };

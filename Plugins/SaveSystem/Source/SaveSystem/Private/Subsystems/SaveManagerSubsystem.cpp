@@ -20,37 +20,25 @@ void USaveManagerSubsystem::Deinitialize()
 
 bool USaveManagerSubsystem::SaveGame()
 {
-
-    UE_LOG(LogTemp, Error, TEXT("===== SaveGame() CALLED ====="));
-
     if (!CurrentSaveGame)
     {
-        CurrentSaveGame =
-            Cast<USaveGameData>(
-                UGameplayStatics::CreateSaveGameObject(
-                    USaveGameData::StaticClass()));
-
-        if (!CurrentSaveGame)
-        {
-            return false;
-        }
+        CurrentSaveGame = Cast<USaveGameData>(
+            UGameplayStatics::CreateSaveGameObject(
+                USaveGameData::StaticClass()));
     }
 
-    // Ask every plugin to write its data first
-    OnGameSaved.Broadcast(CurrentSaveGame);
+    // Save player transform
+    //CurrentSaveGame->PlayerTransform = PlayerTransform;
 
-    // Then save to disk
-    if (!UGameplayStatics::SaveGameToSlot(
+    // Let other systems save their data
+    OnGameSaved.Broadcast(CurrentSaveGame);
+    UE_LOG(LogTemp, Warning, TEXT(" OnGameSave Broadcast "));
+
+
+    return UGameplayStatics::SaveGameToSlot(
         CurrentSaveGame,
         SaveSlot,
-        UserIndex))
-    {
-        return false;
-    }
-
-    UE_LOG(LogTemp, Warning, TEXT("Game Saved"));
-
-    return true;
+        UserIndex);
 }
 
 
@@ -76,11 +64,9 @@ bool USaveManagerSubsystem::LoadGame()
 
     // Restore data here
 
-    UE_LOG(LogTemp, Warning, TEXT("Before Broadcast"));
-
     OnGameLoaded.Broadcast(CurrentSaveGame);
 
-    UE_LOG(LogTemp, Warning, TEXT("After Broadcast"));
+    UE_LOG(LogTemp, Warning, TEXT(" OnGameLoad Broadcast "));
 
     return true;
 }

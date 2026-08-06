@@ -13,6 +13,8 @@ void URespawnSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     if (USaveManagerSubsystem* Save =
         GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
     {
+       
+
         Save->OnGameSaved.AddUObject(
             this,
             &URespawnSubsystem::HandleSave);
@@ -22,6 +24,9 @@ void URespawnSubsystem::Initialize(FSubsystemCollectionBase& Collection)
             &URespawnSubsystem::HandleLoad);
 
         UE_LOG(LogTemp, Warning, TEXT("Respawn Bound To Save Delegates"));
+
+
+
     }
     else
     {
@@ -51,8 +56,11 @@ void URespawnSubsystem::SetCheckpoint(FTransform Checkpoint)
     UE_LOG(LogTemp, Warning, TEXT("Checkpoint Broadcast"));
 }
 
-bool URespawnSubsystem::RespawnPlayer(APawn* Pawn)
+bool URespawnSubsystem::RespawnPlayer(APawn* Pawn , const FTransform& SpawnTransform)
 {
+    UE_LOG(LogTemp, Warning, TEXT("Respawn System Call"));
+
+
     if (!Pawn)
     {
         return false;
@@ -72,8 +80,8 @@ bool URespawnSubsystem::RespawnPlayer(APawn* Pawn)
         return false;
     }
 
-    FVector SpawnLocation = CurrentCheckpoint.GetLocation();
-    FRotator SpawnRotation = CurrentCheckpoint.GetRotation().Rotator();
+    FVector SpawnLocation = SpawnTransform.GetLocation();
+    FRotator SpawnRotation = SpawnTransform.GetRotation().Rotator();
 
     Controller->UnPossess();
 
@@ -94,12 +102,6 @@ bool URespawnSubsystem::RespawnPlayer(APawn* Pawn)
         SpawnLocation,
         SpawnRotation,
         SpawnParams);
-    UE_LOG(LogTemp, Warning,
-        TEXT("Spawned Pawn At = %s"),
-        *NewPawn->GetActorLocation().ToString());
-    UE_LOG(LogTemp, Warning,
-        TEXT("Respawning At = %s"),
-        *CurrentCheckpoint.GetLocation().ToString());
 
     if (!NewPawn)
     {

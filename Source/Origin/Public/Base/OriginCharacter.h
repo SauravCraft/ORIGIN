@@ -6,6 +6,7 @@
 #include "OriginCharacter.generated.h"
 
 class UInputAction;
+class USaveGameData;
 
 UCLASS(Blueprintable)
 class ORIGIN_API AOriginCharacter : public APawn
@@ -14,23 +15,6 @@ class ORIGIN_API AOriginCharacter : public APawn
 
 public:
 	AOriginCharacter();
-
-	virtual void Tick(float DeltaTime) override;
-
-	//UFUNCTION(BlueprintCallable)
-	//void Die();
-
-	//UFUNCTION(BlueprintCallable)
-	//void SaveGameTest();
-
-	//UFUNCTION(BlueprintCallable)
-	//void LoadGameTest();
-
-	//FTimerHandle AutoSaveTimer;
-
-	//void AutoSave();
-
-	void interact();
 
 
 protected:
@@ -41,7 +25,27 @@ protected:
 
 
 	virtual void BeginPlay() override;
+
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+
+	UFUNCTION()
+	void HandleSave(USaveGameData* SaveGame);
+
+	UFUNCTION()
+	void HandleLoad(USaveGameData* SaveGame);
+
+
+	// Input Function
+
+	UFUNCTION(BlueprintCallable)
+	void SaveGameTest();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadGameTest();
+
+	UFUNCTION(BlueprintCallable)
+	void interact();
 
 	// Input Actions 
 
@@ -49,11 +53,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* InteractAction;
 
-	//UPROPERTY(EditDefaultsOnly, Category = "Input")
-	//UInputAction* LoadAction;
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* LoadAction;
 
-	//UPROPERTY(EditDefaultsOnly, Category = "Input")
-	//UInputAction* SaveAction;
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* SaveAction;
 
 
 

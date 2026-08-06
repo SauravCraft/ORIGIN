@@ -27,18 +27,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool RemoveItemByData(UItemData* ItemData, int32 Quantity);
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-	UPROPERTY(VisibleAnywhere, Category = "Inventory")
-	TArray<TObjectPtr<UItemObject>> Items;
-
-public:	
-
 	UPROPERTY(BlueprintAssignable, Category = "Inventory")
 	FOnInventoryChanged OnInventoryChanged;
 
+protected:
+
+	UPROPERTY(VisibleAnywhere, Category = "Inventory")
+	TArray<TObjectPtr<UItemObject>> Items;
 
 
 		

@@ -1,7 +1,9 @@
 #include "Base/OriginCharacter.h"
 
 #include "Base/OriginGameMode.h"
+#include "SaveGames/SaveGameData.h"
 #include "Subsystems/SaveManagerSubsystem.h"
+#include "Subsystems/RespawnSubsystem.h"
 #include "Components/InteractionComponent.h"
 #include "EnhancedInputComponent.h"
 #include "Engine/CollisionProfile.h"
@@ -9,7 +11,7 @@
 
 AOriginCharacter::AOriginCharacter()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	// Create Capsule
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
@@ -28,22 +30,6 @@ AOriginCharacter::AOriginCharacter()
 	// CapsuleComponent->CanCharacterStepUpOn = ECB_Yes;
 }
 
-void AOriginCharacter::Tick(float DeltaTime)
-{
-    Super::Tick(DeltaTime);
-}
-
-//void AOriginCharacter::Die()
-//{
-//    
-//    AOriginGameMode* GM = Cast<AOriginGameMode>(UGameplayStatics::GetGameMode(this));
-//    if (!GM) return;
-//    GM->RespawnPlayer(GetController());
-//
-//
-//}
-
-
 void AOriginCharacter::BeginPlay()
 {
 
@@ -52,16 +38,27 @@ void AOriginCharacter::BeginPlay()
     if (USaveManagerSubsystem* SaveSubsystem =
         GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
     {
+        SaveSubsystem->OnGameLoaded.AddUObject(
+            this,
+            &AOriginCharacter::HandleLoad);
+
+        SaveSubsystem->OnGameSaved.AddUObject(
+            this,
+            &AOriginCharacter::HandleSave);
+
+
         SaveSubsystem->LoadGame();
     }
 
-    //GetWorldTimerManager().SetTimer(
-    //    AutoSaveTimer,
-    //    this,
-    //    &AOriginCharacter::AutoSave,
-    //    100.0f,
-    //    true);
+}
 
+void AOriginCharacter::interact()
+{
+    UInteractionComponent* IC = FindComponentByClass<UInteractionComponent>();
+
+    if (!IC) return;
+
+    IC->Interaction();
 
 }
 
@@ -80,69 +77,60 @@ void AOriginCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
     EnhancedInput->BindAction(
         InteractAction,
-        ETriggerEvent::Triggered,
+        ETriggerEvent::Started,
         this,
         &AOriginCharacter::interact);
 
-    //EnhancedInput->BindAction(
-    //    LoadAction,
-    //    ETriggerEvent::Triggered,
-    //    this,
-    //    &AOriginCharacter::LoadGameTest);
+    EnhancedInput->BindAction(
+        LoadAction,
+        ETriggerEvent::Started,
+        this,
+        &AOriginCharacter::LoadGameTest);
 
 
-        //EnhancedInput->BindAction(
-    //    SaveAction,
-    //    ETriggerEvent::Triggered,
-    //    this,
-    //    &AOriginCharacter::SaveGameTest);
+        EnhancedInput->BindAction(
+        SaveAction,
+        ETriggerEvent::Started,
+        this,
+        &AOriginCharacter::SaveGameTest);
 
 
 }
 
-
-//void AOriginCharacter::AutoSave()
-//{
-//    if (USaveManagerSubsystem* SaveSubsystem =
-//        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
-//    {
-//        SaveSubsystem->SaveGame();
-//
-//        UE_LOG(LogTemp, Warning, TEXT("Auto Saved"));
-//    }
-//}
-//
-//
-//
-//void AOriginCharacter::SaveGameTest()
-//{
-//    USaveManagerSubsystem* SaveSubsystem =
-//        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>();
-//
-//    if (SaveSubsystem)
-//    {
-//        SaveSubsystem->SaveGame();
-//    }
-//}
-//
-//void AOriginCharacter::LoadGameTest()
-//{
-//    USaveManagerSubsystem* SaveSubsystem =
-//        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>();
-//
-//    if (SaveSubsystem)
-//    {
-//        SaveSubsystem->LoadGame();
-//    }
-//
-//}
-
-void AOriginCharacter::interact()
+void AOriginCharacter::SaveGameTest()
 {
-    UInteractionComponent* IC = FindComponentByClass<UInteractionComponent>();
+    USaveManagerSubsystem* SaveSubsystem =
+        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>();
 
-    if (!IC) return;
+    if (SaveSubsystem)
+    {
+        SaveSubsystem->SaveGame();
+    }
+}
 
-    IC->Interaction();
+void AOriginCharacter::LoadGameTest()
+{
+    USaveManagerSubsystem* SaveSubsystem =
+        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>();
 
+    if (SaveSubsystem)
+    {
+        SaveSubsystem->LoadGame();
+    }
+
+}
+
+
+void AOriginCharacter::HandleSave(USaveGameData* SaveGame)
+{
+    SaveGame->PlayerTransform = GetActorTransform();
+}
+
+void AOriginCharacter::HandleLoad(USaveGameData* SaveGame)
+{
+    URespawnSubsystem* Respawn =
+        GetGameInstance()->GetSubsystem<URespawnSubsystem>();
+    if (!Respawn) return;
+
+    Respawn->RespawnPlayer(this, SaveGame->PlayerTransform);
 }
