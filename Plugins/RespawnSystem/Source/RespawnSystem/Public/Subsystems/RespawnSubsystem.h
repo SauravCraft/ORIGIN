@@ -24,7 +24,7 @@ public:
     void SetCheckpoint(FTransform Checkpoint);
 
     /** Respawn an existing pawn */
-    bool RespawnPlayer(APawn* Player);
+    bool RespawnPlayer(APawn* Player, const FTransform& SpawnTransform);
 
     /** Current checkpoint */
     FORCEINLINE FTransform GetCurrentCheckpoint() const

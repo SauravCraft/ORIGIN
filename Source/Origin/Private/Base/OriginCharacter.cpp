@@ -1,7 +1,9 @@
 #include "Base/OriginCharacter.h"
 
 #include "Base/OriginGameMode.h"
+#include "SaveGames/SaveGameData.h"
 #include "Subsystems/SaveManagerSubsystem.h"
+#include "Subsystems/RespawnSubsystem.h"
 #include "Components/InteractionComponent.h"
 #include "EnhancedInputComponent.h"
 #include "Engine/CollisionProfile.h"
@@ -36,6 +38,15 @@ void AOriginCharacter::BeginPlay()
     if (USaveManagerSubsystem* SaveSubsystem =
         GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
     {
+        SaveSubsystem->OnGameLoaded.AddUObject(
+            this,
+            &AOriginCharacter::HandleLoad);
+
+        SaveSubsystem->OnGameSaved.AddUObject(
+            this,
+            &AOriginCharacter::HandleSave);
+
+
         SaveSubsystem->LoadGame();
     }
 
@@ -109,3 +120,17 @@ void AOriginCharacter::LoadGameTest()
 
 }
 
+
+void AOriginCharacter::HandleSave(USaveGameData* SaveGame)
+{
+    SaveGame->PlayerTransform = GetActorTransform();
+}
+
+void AOriginCharacter::HandleLoad(USaveGameData* SaveGame)
+{
+    URespawnSubsystem* Respawn =
+        GetGameInstance()->GetSubsystem<URespawnSubsystem>();
+    if (!Respawn) return;
+
+    Respawn->RespawnPlayer(this, SaveGame->PlayerTransform);
+}

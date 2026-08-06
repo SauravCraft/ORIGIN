@@ -6,6 +6,7 @@
 #include "OriginCharacter.generated.h"
 
 class UInputAction;
+class USaveGameData;
 
 UCLASS(Blueprintable)
 class ORIGIN_API AOriginCharacter : public APawn
@@ -26,6 +27,14 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+
+	UFUNCTION()
+	void HandleSave(USaveGameData* SaveGame);
+
+	UFUNCTION()
+	void HandleLoad(USaveGameData* SaveGame);
+
 
 	// Input Function
 

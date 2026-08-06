@@ -50,7 +50,7 @@ void ADeathBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor*
             return;
         }
         
-        RespawnSubsystem->RespawnPlayer(Pawn);
+        RespawnSubsystem->RespawnPlayer(Pawn, RespawnSubsystem->GetCurrentCheckpoint());
 
     }
 

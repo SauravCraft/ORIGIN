@@ -19,6 +19,8 @@ void URespawnComponent::BeginPlay()
 
 void URespawnComponent::RespawnOwner()
 {
+    UE_LOG(LogTemp, Warning, TEXT("Respawn Component Call"));
+
     if (!RespawnSubsystem)
     {
         return;
@@ -31,5 +33,7 @@ void URespawnComponent::RespawnOwner()
         return;
     }
 
-    RespawnSubsystem->RespawnPlayer(Pawn);
+    RespawnSubsystem->RespawnPlayer(Pawn,GetOwner()->GetActorTransform());
+    UE_LOG(LogTemp, Warning, TEXT("Respawn Component Called"));
+
 }

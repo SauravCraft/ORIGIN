@@ -20,12 +20,13 @@ public:
     UPROPERTY(BlueprintReadWrite)
     FRotator PlayerRotation;
 
-    UPROPERTY(BlueprintReadWrite)
-    float Health = 100.f;
-
     /** Current Respawn Checkpoint */
     UPROPERTY(BlueprintReadWrite)
     FName CurrentCheckpoint;
+
+    UPROPERTY()
+    FTransform PlayerTransform;
+
 
     UPROPERTY(BlueprintReadWrite)
     FTransform CurrentCheckpointTransform;
