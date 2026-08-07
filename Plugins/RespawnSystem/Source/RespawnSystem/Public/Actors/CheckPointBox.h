@@ -17,6 +17,9 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Checkpoint")
     TObjectPtr<UBoxComponent> BoxComponent;
 
+    UPROPERTY(EditAnywhere)
+    FName CheckPointId;
+
 protected:
     virtual void BeginPlay() override;
 

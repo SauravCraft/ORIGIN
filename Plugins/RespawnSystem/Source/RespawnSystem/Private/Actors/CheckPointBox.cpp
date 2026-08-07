@@ -1,6 +1,5 @@
 #include "Actors/CheckpointBox.h"
 #include "Subsystems/SaveManagerSubsystem.h"
-#include "SaveGames/SaveGameData.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Pawn.h"
 #include "Subsystems/RespawnSubsystem.h"
@@ -14,11 +13,28 @@ ACheckpointBox::ACheckpointBox()
     RootComponent = BoxComponent;
 
     BoxComponent->SetCollisionProfileName(TEXT("Trigger"));
+
+
 }
 
 void ACheckpointBox::BeginPlay()
 {
     Super::BeginPlay();
+
+
+    // Restore CheckPoints
+
+    if (URespawnSubsystem* Respawn =
+        GetGameInstance()->GetSubsystem<URespawnSubsystem>())
+    {
+        bIsActivated = Respawn->IsCheckpointActivated(CheckPointId);
+
+        if (bIsActivated)
+        {
+            // Restore visuals
+        }
+
+    }
 
     BoxComponent->OnComponentBeginOverlap.AddDynamic(
         this,
@@ -33,33 +49,33 @@ void ACheckpointBox::OnCheckpointBeginOverlap(
     bool bFromSweep,
     const FHitResult& SweepResult)
 {
-    if (!OtherActor)
-    {
-        return;
-    }
-
     APawn* Pawn = Cast<APawn>(OtherActor);
 
-    if (!Pawn || bIsActivated || !Pawn->IsPlayerControlled())
+    if (!Pawn || !Pawn->IsPlayerControlled() || bIsActivated)
+    {
+        return;
+    }
+
+    URespawnSubsystem* Respawn =
+        GetGameInstance()->GetSubsystem<URespawnSubsystem>();
+
+    if (!Respawn)
+    {
+        return;
+    }
+
+    if (Respawn->IsCheckpointActivated(CheckPointId))
     {
         return;
     }
 
 
+    Respawn->ActivateCheckpoint(CheckPointId);
     bIsActivated = true;
 
-    if (URespawnSubsystem* Respawn =
-        GetGameInstance()->GetSubsystem<URespawnSubsystem>())
-    {
-        Respawn->SetCheckpoint(Pawn->GetActorTransform());
-    }
+    Respawn->SetCheckpoint(Pawn->GetActorTransform());
 
-    if (USaveManagerSubsystem* Save =
-        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>())
-    {
-        Save->SaveGame();
-    }
-
-    UE_LOG(LogTemp, Warning, TEXT("CheckPoint Hit!"));
-
+    UE_LOG(LogTemp, Warning,
+        TEXT("Checkpoint %s Activated"),
+        *CheckPointId.ToString());
 }

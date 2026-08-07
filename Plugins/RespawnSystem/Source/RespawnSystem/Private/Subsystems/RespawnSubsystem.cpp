@@ -41,20 +41,49 @@ void URespawnSubsystem::Deinitialize()
     UE_LOG(LogTemp, Log, TEXT("Respawn Subsystem Deinitialized"));
 }
 
-void URespawnSubsystem::SetCheckpoint(FTransform Checkpoint)
+void URespawnSubsystem::SetCheckpoint(const FTransform& Checkpoint)
 {
-
     if (!Checkpoint.IsValid())
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Invalid Checkpoint Transform"));
+        return;
+    }
+
+    // Avoid broadcasting if the checkpoint hasn't changed
+    if (CurrentCheckpoint.Equals(Checkpoint))
     {
         return;
     }
 
     CurrentCheckpoint = Checkpoint;
 
-    OnCheckpointActivated.Broadcast(CurrentCheckpoint);
+    UE_LOG(LogTemp, Warning,
+        TEXT("Checkpoint Updated: %s"),
+        *CurrentCheckpoint.GetLocation().ToString());
 
-    UE_LOG(LogTemp, Warning, TEXT("Checkpoint Broadcast"));
+    OnCheckpointActivated.Broadcast(CurrentCheckpoint);
 }
+
+
+
+
+
+
+bool URespawnSubsystem::IsCheckpointActivated(FName CheckpointId) const
+{
+    return CurrentActiveCheckpoints.Contains(CheckpointId);
+}
+
+void URespawnSubsystem::ActivateCheckpoint(FName CheckpointId)
+{
+    CurrentActiveCheckpoints.AddUnique(CheckpointId);
+}
+
+
+
+
+
+
 
 bool URespawnSubsystem::RespawnPlayer(APawn* Pawn , const FTransform& SpawnTransform)
 {
@@ -118,22 +147,56 @@ bool URespawnSubsystem::RespawnPlayer(APawn* Pawn , const FTransform& SpawnTrans
 
 
 
-void URespawnSubsystem::HandleSave(
-    USaveGameData* SaveGame)
+void URespawnSubsystem::HandleSave(USaveGameData* SaveGame)
 {
-    SaveGame->CurrentCheckpointTransform =
-        CurrentCheckpoint;
-    UE_LOG(LogTemp, Warning,
-        TEXT("Saved Checkpoint = %s"),
+    if (!SaveGame)
+    {
+        return;
+    }
+
+    SaveGame->CurrentCheckpointTransform = CurrentCheckpoint;
+    SaveGame->ActiveCheckpoints = CurrentActiveCheckpoints;
+
+    UE_LOG(LogTemp, Log,
+        TEXT("Saved Checkpoint: %s"),
         *CurrentCheckpoint.GetLocation().ToString());
+
+    UE_LOG(LogTemp, Log,
+        TEXT("Active Checkpoints: %d"),
+        CurrentActiveCheckpoints.Num());
+
+    for (const FName& Checkpoint : CurrentActiveCheckpoints)
+    {
+        UE_LOG(LogTemp, Log,
+            TEXT(" - %s"),
+            *Checkpoint.ToString());
+    }
 }
 
-void URespawnSubsystem::HandleLoad(
-    USaveGameData* SaveGame)
+void URespawnSubsystem::HandleLoad(USaveGameData* SaveGame)
 {
-    CurrentCheckpoint =
-        SaveGame->CurrentCheckpointTransform;
-    UE_LOG(LogTemp, Warning,
-        TEXT("Loaded Checkpoint = %s"),
+    if (!SaveGame)
+    {
+        return;
+    }
+
+    CurrentCheckpoint = SaveGame->CurrentCheckpointTransform;
+    CurrentActiveCheckpoints = SaveGame->ActiveCheckpoints;
+
+    UE_LOG(LogTemp, Log,
+        TEXT("Loaded Checkpoint: %s"),
         *CurrentCheckpoint.GetLocation().ToString());
+
+    UE_LOG(LogTemp, Log,
+        TEXT("Loaded Active Checkpoints: %d"),
+        CurrentActiveCheckpoints.Num());
+
+    for (const FName& Checkpoint : CurrentActiveCheckpoints)
+    {
+        UE_LOG(LogTemp, Log,
+            TEXT(" - %s"),
+            *Checkpoint.ToString());
+    }
+
+    OnCheckpointLoaded.Broadcast();
 }

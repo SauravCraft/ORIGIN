@@ -35,6 +35,10 @@ public:
     UPROPERTY(BlueprintReadWrite)
     TArray<FName> ActiveCheckpoints;
 
+    /* Health System */
+    UPROPERTY(BlueprintReadWrite)
+    float Health;
+
     /** Save Slot */
     UPROPERTY(BlueprintReadWrite)
     FString SlotName;

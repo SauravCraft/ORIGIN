@@ -9,6 +9,7 @@ class USaveGameData;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnCheckpointActivated, FTransform);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerRespawned, APawn*);
+DECLARE_MULTICAST_DELEGATE(FOnCheckpointLoaded);
 
 UCLASS()
 class RESPAWNSYSTEM_API URespawnSubsystem : public UGameInstanceSubsystem
@@ -21,7 +22,7 @@ public:
     virtual void Deinitialize() override;
 
     /** Set active checkpoint */
-    void SetCheckpoint(FTransform Checkpoint);
+    void SetCheckpoint(const FTransform& Checkpoint);
 
     /** Respawn an existing pawn */
     bool RespawnPlayer(APawn* Player, const FTransform& SpawnTransform);
@@ -31,6 +32,13 @@ public:
     {
         return CurrentCheckpoint;
     }
+
+    // Getter for Active Checkpoints
+
+    bool IsCheckpointActivated(FName CheckpointId) const;
+
+    void ActivateCheckpoint(FName CheckpointId);
+
 
 
     // Save System 
@@ -46,10 +54,16 @@ public:
 
     FOnCheckpointActivated OnCheckpointActivated;
     FOnPlayerRespawned OnPlayerRespawned;
+    FOnCheckpointLoaded OnCheckpointLoaded;
+
 
 private:
 
     UPROPERTY()
     FTransform CurrentCheckpoint;
+
+    UPROPERTY()
+    TArray<FName> CurrentActiveCheckpoints;
+    
 
 };
