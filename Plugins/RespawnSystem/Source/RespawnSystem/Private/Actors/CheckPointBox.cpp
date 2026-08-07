@@ -1,5 +1,4 @@
 #include "Actors/CheckpointBox.h"
-#include "Subsystems/SaveManagerSubsystem.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Pawn.h"
 #include "Subsystems/RespawnSubsystem.h"
@@ -17,23 +16,39 @@ ACheckpointBox::ACheckpointBox()
 
 }
 
+void ACheckpointBox::OnCheckpointLoaded()
+{
+    UE_LOG(LogTemp, Warning,
+        TEXT("Refresh %s"),
+        *CheckPointId.ToString());
+
+    URespawnSubsystem* Respawn =
+        GetGameInstance()->GetSubsystem<URespawnSubsystem>();
+
+    if (!Respawn)
+    {
+        return;
+    }
+
+    bIsActivated =
+        Respawn->IsCheckpointActivated(CheckPointId);
+
+    UE_LOG(LogTemp, Warning,
+        TEXT("%s = %d"),
+        *CheckPointId.ToString(),
+        bIsActivated);
+}
+
 void ACheckpointBox::BeginPlay()
 {
     Super::BeginPlay();
 
-
-    // Restore CheckPoints
-
     if (URespawnSubsystem* Respawn =
         GetGameInstance()->GetSubsystem<URespawnSubsystem>())
     {
-        bIsActivated = Respawn->IsCheckpointActivated(CheckPointId);
-
-        if (bIsActivated)
-        {
-            // Restore visuals
-        }
-
+        Respawn->OnCheckpointLoaded.AddUObject(
+            this,
+            &ACheckpointBox::OnCheckpointLoaded);
     }
 
     BoxComponent->OnComponentBeginOverlap.AddDynamic(
@@ -53,27 +68,37 @@ void ACheckpointBox::OnCheckpointBeginOverlap(
 
     if (!Pawn || !Pawn->IsPlayerControlled() || bIsActivated)
     {
+        UE_LOG(LogTemp, Warning, TEXT("1"));
+
         return;
     }
-
+    UE_LOG(LogTemp, Warning, TEXT("2"));
     URespawnSubsystem* Respawn =
         GetGameInstance()->GetSubsystem<URespawnSubsystem>();
 
     if (!Respawn)
     {
+        UE_LOG(LogTemp, Warning, TEXT("3"));
+
         return;
     }
 
     if (Respawn->IsCheckpointActivated(CheckPointId))
     {
+        UE_LOG(LogTemp, Warning, TEXT("4"));
+
         return;
+
     }
 
-
     Respawn->ActivateCheckpoint(CheckPointId);
+    UE_LOG(LogTemp, Warning, TEXT("5"));
+
     bIsActivated = true;
+    UE_LOG(LogTemp, Warning, TEXT("6"));
 
     Respawn->SetCheckpoint(Pawn->GetActorTransform());
+
 
     UE_LOG(LogTemp, Warning,
         TEXT("Checkpoint %s Activated"),

@@ -48,8 +48,9 @@ void URespawnSubsystem::SetCheckpoint(const FTransform& Checkpoint)
         UE_LOG(LogTemp, Warning, TEXT("Invalid Checkpoint Transform"));
         return;
     }
+     
+    // Avoid broadcasting if the checkpoint hasn't changed 
 
-    // Avoid broadcasting if the checkpoint hasn't changed
     if (CurrentCheckpoint.Equals(Checkpoint))
     {
         return;
@@ -60,6 +61,11 @@ void URespawnSubsystem::SetCheckpoint(const FTransform& Checkpoint)
     UE_LOG(LogTemp, Warning,
         TEXT("Checkpoint Updated: %s"),
         *CurrentCheckpoint.GetLocation().ToString());
+
+    USaveManagerSubsystem* SaveSubsystem =
+        GetGameInstance()->GetSubsystem<USaveManagerSubsystem>();
+    SaveSubsystem->SaveGame();
+
 
     OnCheckpointActivated.Broadcast(CurrentCheckpoint);
 }

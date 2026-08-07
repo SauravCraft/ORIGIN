@@ -6,6 +6,8 @@
 
 class UBoxComponent;
 
+
+
 UCLASS()
 class RESPAWNSYSTEM_API ACheckpointBox : public AActor
 {
@@ -19,6 +21,9 @@ public:
 
     UPROPERTY(EditAnywhere)
     FName CheckPointId;
+    void OnCheckpointLoaded();
+
+
 
 protected:
     virtual void BeginPlay() override;
