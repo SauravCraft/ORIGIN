@@ -18,6 +18,8 @@ public:
 	// Sets default values for this actor's properties
 	ADeathBox();
 
+    void Die(AActor* DieActor);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

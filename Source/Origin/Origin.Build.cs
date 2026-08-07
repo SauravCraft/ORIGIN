@@ -8,7 +8,8 @@ public class Origin : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "InteractionSystem", "RespawnSystem" , "SaveSystem" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "InteractionSystem", "RespawnSystem" , "SaveSystem",
+		"HealthSystem",});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

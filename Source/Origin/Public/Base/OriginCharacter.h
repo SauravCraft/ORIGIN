@@ -35,6 +35,9 @@ protected:
 	UFUNCTION()
 	void HandleLoad(USaveGameData* SaveGame);
 
+	UFUNCTION()
+	void HandleDeath();
+
 
 	// Input Function
 
@@ -43,6 +46,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void LoadGameTest();
+
+	UFUNCTION(BlueprintCallable)
+	void TakeDamageTest();
 
 	UFUNCTION(BlueprintCallable)
 	void interact();
@@ -58,6 +64,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* SaveAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* TakeDamage;
 
 
 

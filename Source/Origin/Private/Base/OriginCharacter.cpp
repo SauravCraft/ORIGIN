@@ -2,6 +2,7 @@
 
 #include "Base/OriginGameMode.h"
 #include "SaveGames/SaveGameData.h"
+#include "Components/HealthComponent.h"
 #include "Subsystems/SaveManagerSubsystem.h"
 #include "Subsystems/RespawnSubsystem.h"
 #include "Components/InteractionComponent.h"
@@ -46,8 +47,16 @@ void AOriginCharacter::BeginPlay()
             this,
             &AOriginCharacter::HandleSave);
 
-
         SaveSubsystem->LoadGame();
+    }
+    if (UHealthComponent* Health =
+        FindComponentByClass<UHealthComponent>())
+    {
+        Health->OnDeath.AddUObject(
+            this, 
+            &AOriginCharacter::HandleDeath);
+
+        UE_LOG(LogTemp, Warning, TEXT("Health Comp Call inside Character"));
     }
 
 }
@@ -94,6 +103,12 @@ void AOriginCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
         this,
         &AOriginCharacter::SaveGameTest);
 
+        EnhancedInput->BindAction(
+        TakeDamage,
+        ETriggerEvent::Started,
+        this,
+        &AOriginCharacter::TakeDamageTest);
+
 
 }
 
@@ -120,6 +135,14 @@ void AOriginCharacter::LoadGameTest()
 
 }
 
+void AOriginCharacter::TakeDamageTest()
+{
+
+    UHealthComponent* Health = FindComponentByClass<UHealthComponent>();
+    if (!Health) return;
+    Health->TakeDamage(this,40);
+}
+
 
 void AOriginCharacter::HandleSave(USaveGameData* SaveGame)
 {
@@ -133,4 +156,19 @@ void AOriginCharacter::HandleLoad(USaveGameData* SaveGame)
     if (!Respawn) return;
 
     Respawn->RespawnPlayer(this, SaveGame->PlayerTransform);
+}
+
+void AOriginCharacter::HandleDeath()
+{
+
+    if (URespawnSubsystem* Respawn =
+        GetGameInstance()->GetSubsystem<URespawnSubsystem>())
+    {
+        Respawn->RespawnPlayer(
+            this,
+            Respawn->GetCurrentCheckpoint());
+    }
+
+    UE_LOG(LogTemp, Warning, TEXT("Handle Death Called"));
+
 }

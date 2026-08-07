@@ -21,6 +21,24 @@ ADeathBox::ADeathBox()
 
 }
 
+void ADeathBox::Die(AActor* DieActor)
+{
+    if (URespawnSubsystem* RespawnSubsystem =
+        GetGameInstance()->GetSubsystem<URespawnSubsystem>())
+    {
+
+        APawn* Pawn = Cast<APawn>(DieActor);
+
+        if (!Pawn || !Pawn->IsPlayerControlled())
+        {
+            return;
+        }
+
+        RespawnSubsystem->RespawnPlayer(Pawn, RespawnSubsystem->GetCurrentCheckpoint());
+
+    }
+}
+
 // Called when the game starts or when spawned
 void ADeathBox::BeginPlay()
 {
@@ -39,20 +57,7 @@ void ADeathBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor*
         return;
     }
 
-    if (URespawnSubsystem* RespawnSubsystem =
-        GetGameInstance()->GetSubsystem<URespawnSubsystem>())
-    {
-
-        APawn* Pawn = Cast<APawn>(OtherActor);
-
-        if (!Pawn || !Pawn->IsPlayerControlled())
-        {
-            return;
-        }
-        
-        RespawnSubsystem->RespawnPlayer(Pawn, RespawnSubsystem->GetCurrentCheckpoint());
-
-    }
+    Die(OtherActor);
 
     UE_LOG(LogTemp, Warning, TEXT("Death Box Hit!"));
 

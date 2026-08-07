@@ -7,9 +7,9 @@
 #include "HealthComponent.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHealthChanged);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeath);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHeal);
+DECLARE_MULTICAST_DELEGATE(FOnHealthChanged);
+DECLARE_MULTICAST_DELEGATE(FOnDeath);
+DECLARE_MULTICAST_DELEGATE(FOnHeal);
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -21,17 +21,39 @@ public:
 	// Sets default values for this component's properties
 	UHealthComponent();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	UFUNCTION(BlueprintCallable)
+	void TakeDamage(AActor* Damagable, const float& Damage);
+
+	UFUNCTION(BlueprintCallable)
+	void Kill();
+
+
+
+
+
+
 
 
 	FOnHealthChanged OnHealthChange;
 	FOnDeath OnDeath;
 	FOnHeal OnHeal;
+
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
+
+private:	
+
+	UPROPERTY(EditAnywhere)
+	float MaxHealth = 100.f;
+
+	UPROPERTY()
+	float CurrentHealth;
+
+
+
 		
 };
